@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  db:
+    build: ./BDD-GIS
+    image: duunky/dunkyandfilscorporation:BDD-GIS
+    container_name: BDD-GIS
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: dunkyandfilscorporation
+      MYSQL_ROOT_PASSWORD: root
+
+
+  web:
+    build: ./server-web-GIS
+    image: duunky/dunkyandfilscorporation:server-web-GIS
+    container_name: server-web-GIS
+    ports:
+      - "80:80" 
+    depends_on:
+      - db 
