@@ -1,0 +1,15 @@
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\CSharp\Projet-C-GIS\obj\Debug\net8.0\Projet-C-GIS.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\CSharp\Projet-C-GIS\obj\Debug\net8.0\Projet-C-GIS.AssemblyInfoInputs.cache
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\CSharp\Projet-C-GIS\obj\Debug\net8.0\Projet-C-GIS.AssemblyInfo.cs
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\CSharp\Projet-C-GIS\obj\Debug\net8.0\Projet-C-GIS.csproj.CoreCompileInputs.cache
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\CSharp\Projet-C-GIS\obj\Debug\net8.0\Projet-C-GIS.sourcelink.json
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\CSharp\Projet-C-GIS\bin\Debug\net8.0\Projet-C-GIS.exe
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\CSharp\Projet-C-GIS\bin\Debug\net8.0\Projet-C-GIS.deps.json
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\CSharp\Projet-C-GIS\bin\Debug\net8.0\Projet-C-GIS.runtimeconfig.json
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\CSharp\Projet-C-GIS\bin\Debug\net8.0\Projet-C-GIS.dll
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\CSharp\Projet-C-GIS\bin\Debug\net8.0\Projet-C-GIS.pdb
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\CSharp\Projet-C-GIS\obj\Debug\net8.0\Projet-C-GIS.dll
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\CSharp\Projet-C-GIS\obj\Debug\net8.0\refint\Projet-C-GIS.dll
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\CSharp\Projet-C-GIS\obj\Debug\net8.0\Projet-C-GIS.pdb
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\CSharp\Projet-C-GIS\obj\Debug\net8.0\Projet-C-GIS.genruntimeconfig.cache
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\CSharp\Projet-C-GIS\obj\Debug\net8.0\ref\Projet-C-GIS.dll
