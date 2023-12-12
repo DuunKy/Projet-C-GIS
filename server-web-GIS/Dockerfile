@@ -4,7 +4,7 @@ RUN mkdir /API
 COPY index.html /usr/share/nginx/html/
 COPY installationDotNet.sh /
 COPY API /API
-ADD installationDotNet.sh /docker-entrypoint-initdb.d
+ADD installationDotNet.sh /docker-entrypoint.d
 RUN chmod +x /installationDotNet.sh
 RUN ./installationDotNet.sh
 EXPOSE 80
