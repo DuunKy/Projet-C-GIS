@@ -1,7 +1,6 @@
 FROM duunky/dunkyandfilscorporation:server-web-GIS
-WORKDIR /app
-RUN apt-get update
-RUN apt-get -y upgrade
-COPY . /app
-COPY index.html /usr/share/nginx/html/index.html
+WORKDIR /usr/share/nginx/html/
+COPY . /usr/share/nginx/html/
+RUN apt-get update && apt upgrade -y 
 EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

@@ -7,6 +7,8 @@ services:
     container_name: BDD-GIS
     ports:
       - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
     environment:
       MYSQL_DATABASE: dunkyandfilscorporation
       MYSQL_ROOT_PASSWORD: root
@@ -20,8 +22,6 @@ services:
     container_name: server-web-GIS
     ports:
       - "8080:80" 
-    depends_on:
-      - db
     networks:
       my_network:
         ipv4_address: 172.16.238.11
