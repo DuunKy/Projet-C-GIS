@@ -16,17 +16,15 @@ namespace Controllers
         // mes identifiants pour me connect a mon mysql workbench
         private List<Users> users;
 
+// TODO: 
+// gener mieux la connection sql = 1 connection
+
 
         public string ProcessRequest(HttpListenerRequest request)
         {
             string responseString = "";
 
-            // TODO: 
-            // CRUD - patch?
-            // gener mieux la connection sql = 1 connection
-
-
-            // 
+            //GET
 
             if (request.HttpMethod == "GET" && request.Url.PathAndQuery == "/api/users")
             {
@@ -57,7 +55,15 @@ namespace Controllers
                 }
                 else
                 {
-                    responseString = "not a Id, Error =  " + (int)HttpStatusCode.BadRequest;
+                    //FIXME:
+                    string myEndPointString = parts[3];
+
+                    var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
+                    responseString = JsonSerializer.Serialize(HttpGetUserByLastName(myEndPointString), options);
+                    if (responseString == "null")
+                    {
+                    responseString = "Invalid Name, Error =  " + (int)HttpStatusCode.BadRequest;
+                    }
                 }
             }
 
@@ -209,11 +215,7 @@ namespace Controllers
                 }
             }
 
-            
-
-           
-
-
+            //final return
             return responseString;
         }
 
@@ -410,7 +412,7 @@ namespace Controllers
             catch (Exception ex)
             {
                 // gestion de l'erreur
-                return $"Error during post: {ex.Message}";
+                return $"Error during PUT: {ex.Message}";
             }
         }
 
@@ -429,6 +431,43 @@ namespace Controllers
                 using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                 {
                     command.Parameters.AddWithValue("@UserId", id); 
+                    // permet d'envoyé des données dans la query par un @ en C#
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            user = new Users
+                            {
+                                User_Id = Convert.ToInt32(reader["User_Id"]),
+                                User_FirstName = reader["User_FirstName"].ToString(),
+                                User_LastName = reader["User_LastName"].ToString(),
+                                User_Email = reader["User_Email"].ToString(),
+                                User_Password = reader["User_Password"].ToString(),
+                                User_Phone = reader["User_Phone"].ToString(),
+                            };
+                        }
+                    }
+                }
+            }
+
+            return user;
+        }
+
+        private Users HttpGetUserByLastName(string name)
+        {
+            
+        Users user = null;
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string SqlRequest = "SELECT * FROM users WHERE User_LastName = @UserLastName"; // ma query SQL
+
+                using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
+                {
+                    command.Parameters.AddWithValue("@UserLastName", name); 
                     // permet d'envoyé des données dans la query par un @ en C#
 
                     using (MySqlDataReader reader = command.ExecuteReader())
@@ -486,7 +525,7 @@ namespace Controllers
             catch (Exception ex)
             {
                 // gestion de l'erreur
-                return $"Error during post: {ex.Message}";
+                return $"Error during DEL: {ex.Message}";
             }
         }
 
