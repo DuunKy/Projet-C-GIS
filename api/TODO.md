@@ -2,6 +2,6 @@
 ~~test~~ ~~ pour barrer
 
 
-[ ] - Reorganiser les fichiers
-[ ] - Lier mysql a l'api
-[ ] - Lier postman a l'api pour plus de test
+[x] - Reorganiser les fichiers
+[x] - Lier mysql a l'api
+[x] - Lier postman a l'api pour plus de test
