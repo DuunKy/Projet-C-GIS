@@ -90,20 +90,28 @@ namespace Controllers
                 string[] parts = strings; // separe notre url sur les "/"
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
-                    using (var reader = new StreamReader(request.InputStream, request.ContentEncoding))
+                    try
                     {
-                        string requestBody = reader.ReadToEnd(); // permet de lire le body de la requete postman json
-                        var data = JsonSerializer.Deserialize<Users>(requestBody); //ici data accede au body
+                        using (var reader = new StreamReader(request.InputStream, request.ContentEncoding))
+                        {
+                            string requestBody = reader.ReadToEnd(); // permet de lire le body de la requete postman json
+                            var data = JsonSerializer.Deserialize<Users>(requestBody); //ici data accede au body
 
-                        string firstName = data.User_FirstName;
-                        string lastName = data.User_LastName;
-                        string email = data.User_Email;
-                        string password = data.User_Password;
-                        string phone = data.User_Phone;
+                            string firstName = data.User_FirstName;
+                            string lastName = data.User_LastName;
+                            string email = data.User_Email;
+                            string password = data.User_Password;
+                            string phone = data.User_Phone;
 
-                        
-                        var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                        responseString = JsonSerializer.Serialize(HttpPutUserById(id, firstName, lastName, email, password, phone), options);
+                            
+                            var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
+                            responseString = JsonSerializer.Serialize(HttpPutUserById(id, firstName, lastName, email, password, phone), options);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Gérer l'erreur
+                        return $"no or bad body send: {ex.Message}";
                     }
                     
                 }
@@ -147,7 +155,61 @@ namespace Controllers
                 }
             }
 
-            // HTTP PATCH?
+            // HTTP PATCH
+
+
+            else if (request.HttpMethod == "PATCH" && request.Url.PathAndQuery.StartsWith("/api/users/"))
+            {
+                string[] strings = request.Url.PathAndQuery.Split('/');
+                string[] parts = strings; // sépare notre URL sur les "/"
+                if (parts.Length == 4 && int.TryParse(parts[3], out int id))
+                {
+
+                    try
+                    {
+                    using (var reader = new StreamReader(request.InputStream, request.ContentEncoding))
+                    {
+                        string requestBody = reader.ReadToEnd(); // permet de lire le body de la requete postman json
+                        var data = JsonSerializer.Deserialize<Users>(requestBody); //ici data accede au body
+                        
+                        string firstName = data.User_FirstName;
+                        string lastName = data.User_LastName;
+                        string email = data.User_Email;
+                        string password = data.User_Password;
+                        string phone = data.User_Phone;
+
+                        if (firstName == null && lastName == null && email == null && password == null && phone == null)
+                        {
+                            responseString = "bad body";
+                        }
+                        else
+                        {
+                            var options = new JsonSerializerOptions { WriteIndented = true };
+                            responseString = JsonSerializer.Serialize(HttpPatchUserById(id, firstName, lastName, email, password, phone), options);
+                        }
+                    }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Gérer l'erreur
+                        return $"no or bad body send: {ex.Message}";
+                    }
+                }
+                else if (parts.Length > 4)
+                {
+                    responseString = "bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
+                }
+                else if (request.Url.PathAndQuery == "/api/users/")
+                {
+                    responseString = "enter an id please, bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
+                }
+                else
+                {
+                    responseString = "not an Id, Error =  " + (int)HttpStatusCode.BadRequest;
+                }
+            }
+
+            
 
            
 
@@ -157,7 +219,75 @@ namespace Controllers
 
 
 
+        private string HttpPatchUserById(int id, string firstName, string lastName, string email, string password, string phone)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
 
+                    // cette requete permet de mettre a jour seulement les champs non vide
+                    string SqlRequest = "UPDATE users SET ";
+
+                    List<string> updates = new List<string>();
+
+                    if (!string.IsNullOrEmpty(firstName))
+                    {
+                        updates.Add("User_FirstName = @FirstName");
+                    }
+                    if (!string.IsNullOrEmpty(lastName))
+                    {
+                        updates.Add("User_LastName = @LastName");
+                    }
+                    if (!string.IsNullOrEmpty(email))
+                    {
+                        updates.Add("User_Email = @Email");
+                    }
+                    if (!string.IsNullOrEmpty(password))
+                    {
+                        updates.Add("User_Password = @Password");
+                    }
+                    if (!string.IsNullOrEmpty(phone))
+                    {
+                        updates.Add("User_Phone = @Phone");
+                    }
+
+                    SqlRequest += string.Join(", ", updates);
+                    SqlRequest += " WHERE User_Id = @UserId";
+
+                    //ici on fait des collages pour avoir notre requete sql
+
+                    Console.WriteLine(SqlRequest);
+
+                    using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
+                    {
+                        command.Parameters.AddWithValue("@UserId", id);
+                        command.Parameters.AddWithValue("@FirstName", firstName);
+                        command.Parameters.AddWithValue("@LastName", lastName);
+                        command.Parameters.AddWithValue("@Email", email);
+                        command.Parameters.AddWithValue("@Password", password);
+                        command.Parameters.AddWithValue("@Phone", phone);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            return "Patch success! User updated!";
+                        }
+                        else
+                        {
+                            return "Invalid id or no rows affected.";
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Gérer l'erreur
+                return $"Error during PATCH: {ex.Message}";
+            }
+        }
 
 
         private string HttpPostNewUser(string firstName, string lastName, string email, string password, string phone)
