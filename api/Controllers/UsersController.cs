@@ -22,9 +22,8 @@ namespace Controllers
             string responseString = "";
 
             // TODO: 
-            // CRUD
-            // PUT - DELETE
-            // UPDATE - DELETE
+            // CRUD - patch?
+            // gener mieux la connection sql = 1 connection
 
 
             // 
@@ -271,6 +270,7 @@ namespace Controllers
                         }
                         else
                         {
+                            //cree un user sur le haut de la liste si aucun id atribué
                             HttpPostNewUser(firstName, lastName, email, password, phone);
                             return "This Id is empty, New User created";
                         }
