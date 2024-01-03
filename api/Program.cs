@@ -8,7 +8,6 @@ using System.Net;
 using System.Text.Json;
 
 
-// FIXME: Reorganiser les fichiers, separarer le user de program.cs
 class SimpleHttpServer
 {
     private HttpListener listener;
