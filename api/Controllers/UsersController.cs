@@ -44,20 +44,35 @@ namespace Controllers
 
                 }
 
-                if (parts.Length == 5 && parts[4] == "shoplists" && int.TryParse(parts[3], out int myId))
-                    {
-                        var options = new JsonSerializerOptions { WriteIndented = true };
-                        var shoplists = HttpGetShoplistByUserId(myId);
+                else if (parts.Length == 5 && parts[4] == "shoplists" && int.TryParse(parts[3], out int myId))
+                {
+                    var options = new JsonSerializerOptions { WriteIndented = true };
+                    var shoplists = HttpGetShoplistByUserId(myId);
 
-                        if (shoplists.Any())
-                        {
-                            responseString = JsonSerializer.Serialize(shoplists, options);
-                        }
-                        else
-                        {
-                            responseString = "Invalid id or no shoplists found, Error = " + (int)HttpStatusCode.BadRequest;
-                        }
+                    if (shoplists.Any())
+                    {
+                        responseString = JsonSerializer.Serialize(shoplists, options);
                     }
+                    else
+                    {
+                        responseString = "Invalid id or no shoplists found, Error = " + (int)HttpStatusCode.BadRequest;
+                    }
+                }
+
+                else if (parts.Length == 5 && parts[4] == "carts" && int.TryParse(parts[3], out int myotherId))
+                {
+                    var options = new JsonSerializerOptions { WriteIndented = true };
+                    var shoplists = HttpGetCartByShoplistId(myotherId);
+
+                    if (shoplists.Any())
+                    {
+                        responseString = JsonSerializer.Serialize(shoplists, options);
+                    }
+                    else
+                    {
+                        responseString = "Invalid id or no shoplists found, Error = " + (int)HttpStatusCode.BadRequest;
+                    }
+                }
                                     
                 else if (parts.Length > 4)
                 {
@@ -492,6 +507,53 @@ namespace Controllers
             }
 
         return shoplists;
+        }
+
+        //FIXME: a retravailler pour avoir la carts par l'userid et pas shoplistid
+        private IEnumerable<Carts> HttpGetCartByShoplistId(int id)
+        {
+            
+        List<Carts> carts = new List<Carts>();
+
+            try
+            {
+
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string SqlRequest = "SELECT * FROM carts WHERE Shoplist_Id = @ShoplistId"; // ma query SQL
+
+                    using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
+                    {
+                        command.Parameters.AddWithValue("@ShoplistId", id); 
+                        // permet d'envoyé des données dans la query par un @ en C#
+
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Carts cart = new Carts
+                                {
+                                    Shoplist_Id = Convert.ToInt32(reader["Shoplist_Id"]),
+                                    Product_Id = Convert.ToInt32(reader["Product_Id"]),
+                                    Cart_Total = Convert.ToInt32(reader["Cart_Total"]),
+                                    Cart_ProductCount = Convert.ToInt32(reader["Cart_ProductCount"])
+                                
+                                };
+                                carts.Add(cart);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception
+                Console.WriteLine($"Error during shop list retrieval: {ex.Message}");
+            }
+
+        return carts;
         }
 
         private Users HttpGetUserById(int id)
