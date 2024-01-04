@@ -146,21 +146,21 @@ namespace Controllers
 
             //DELETE
 
-            else if (request.HttpMethod == "DELETE" && request.Url.PathAndQuery.StartsWith("/api/users/"))
+            else if (request.HttpMethod == "DELETE" && request.Url.PathAndQuery.StartsWith("/api/products/"))
             {
                 string[] strings = request.Url.PathAndQuery.Split('/');
                 string[] parts = strings; // separe notre url sur les "/"
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                    responseString = JsonSerializer.Serialize(HttpDelUserById(id), options);
+                    responseString = JsonSerializer.Serialize(HttpDelProductById(id), options);
 
                 }
                 else if (parts.Length > 4)
                 {
                     responseString = "bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
                 }
-                else if (request.Url.PathAndQuery == "/api/users/")
+                else if (request.Url.PathAndQuery == "/api/products/")
                 {
                     responseString = "enter a id please, bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
                 }
@@ -536,7 +536,7 @@ namespace Controllers
             return products;
         }
 
-        private string HttpDelUserById(int id)
+        private string HttpDelProductById(int id)
         {
 
             try
@@ -545,18 +545,18 @@ namespace Controllers
                 {
                     connection.Open();
 
-                    string SqlRequest = "DELETE FROM users WHERE User_Id = @UserId"; // ma query SQL
+                    string SqlRequest = "DELETE FROM products WHERE Product_Id = @ProductId"; // ma query SQL
 
                     using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                     {
-                        command.Parameters.AddWithValue("@UserId", id); 
+                        command.Parameters.AddWithValue("@ProductId", id); 
                         // permet d'envoyé des données dans la query par un @ en C#
 
                         int rowsAffected = command.ExecuteNonQuery();
 
                         if (rowsAffected > 0)
                         {
-                            return "Its work! User supprimer! ";
+                            return "Its work! Product supprimer! ";
                         }
                         else
                         {
