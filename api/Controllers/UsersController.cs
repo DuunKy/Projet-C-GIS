@@ -62,7 +62,7 @@ namespace Controllers
                 else if (parts.Length == 5 && parts[4] == "carts" && int.TryParse(parts[3], out int myotherId))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true };
-                    var shoplists = HttpGetCartByShoplistId(myotherId);
+                    var shoplists = HttpGetCartsByUserId(myotherId);
 
                     if (shoplists.Any())
                     {
@@ -71,6 +71,36 @@ namespace Controllers
                     else
                     {
                         responseString = "Invalid id or no shoplists found, Error = " + (int)HttpStatusCode.BadRequest;
+                    }
+                }
+                
+                else if (parts.Length == 5 && parts[4] == "commands" && int.TryParse(parts[3], out int mythirdId))
+                {
+                    var options = new JsonSerializerOptions { WriteIndented = true };
+                    var shoplists = HttpGetCommandsByUserId(mythirdId);
+
+                    if (shoplists.Any())
+                    {
+                        responseString = JsonSerializer.Serialize(shoplists, options);
+                    }
+                    else
+                    {
+                        responseString = "Invalid id or no commands found, Error = " + (int)HttpStatusCode.BadRequest;
+                    }
+                }
+
+                else if (parts.Length == 5 && parts[4] == "invoices" && int.TryParse(parts[3], out int mylastId))
+                {
+                    var options = new JsonSerializerOptions { WriteIndented = true };
+                    var shoplists = HttpGetInvoicesByUserId(mylastId);
+
+                    if (shoplists.Any())
+                    {
+                        responseString = JsonSerializer.Serialize(shoplists, options);
+                    }
+                    else
+                    {
+                        responseString = "Invalid id or no invoices found, Error = " + (int)HttpStatusCode.BadRequest;
                     }
                 }
                                     
@@ -509,52 +539,118 @@ namespace Controllers
         return shoplists;
         }
 
-        //FIXME: a retravailler pour avoir la carts par l'userid et pas shoplistid
-        private IEnumerable<Carts> HttpGetCartByShoplistId(int id)
+        private IEnumerable<Commands> HttpGetCommandsByUserId(int userId)
         {
-            
-        List<Carts> carts = new List<Carts>();
+            List<Commands> commands = new List<Commands>();
 
-            try
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
+                connection.Open();
 
-                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                // Utilisez une requête SQL avec une jointure pour récupérer les commandes liées au User_Id
+                string sqlRequest = "SELECT c.* FROM commands c " +
+                                    "JOIN shoplists s ON c.Shoplist_Id = s.Shoplist_Id " +
+                                    "WHERE s.User_Id = @UserId";
+
+                using (MySqlCommand command = new MySqlCommand(sqlRequest, connection))
                 {
-                    connection.Open();
+                    command.Parameters.AddWithValue("@UserId", userId);
 
-                    string SqlRequest = "SELECT * FROM carts WHERE Shoplist_Id = @ShoplistId"; // ma query SQL
-
-                    using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
+                    using (MySqlDataReader reader = command.ExecuteReader())
                     {
-                        command.Parameters.AddWithValue("@ShoplistId", id); 
-                        // permet d'envoyé des données dans la query par un @ en C#
-
-                        using (MySqlDataReader reader = command.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
+                            Commands commande = new Commands
                             {
-                                Carts cart = new Carts
-                                {
-                                    Shoplist_Id = Convert.ToInt32(reader["Shoplist_Id"]),
-                                    Product_Id = Convert.ToInt32(reader["Product_Id"]),
-                                    Cart_Total = Convert.ToInt32(reader["Cart_Total"]),
-                                    Cart_ProductCount = Convert.ToInt32(reader["Cart_ProductCount"])
-                                
-                                };
-                                carts.Add(cart);
-                            }
+                                Command_Id = Convert.ToInt32(reader["Command_Id"]),
+                                Shoplist_Id = Convert.ToInt32(reader["Shoplist_Id"]),
+                                Command_OrderDate = Convert.ToString(reader["Command_OrderDate"])
+                            };
+                            commands.Add(commande);
                         }
                     }
                 }
             }
-            catch (Exception ex)
+
+            return commands;
+        }
+
+
+        private IEnumerable<Carts> HttpGetCartsByUserId(int userId)
+        {
+            List<Carts> carts = new List<Carts>();
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                // Handle the exception
-                Console.WriteLine($"Error during shop list retrieval: {ex.Message}");
+                connection.Open();
+
+                // Utilisez une requête SQL avec une jointure pour récupérer les carts liés au User_Id
+                string sqlRequest = "SELECT c.* FROM carts c " +
+                                    "JOIN shoplists s ON c.Shoplist_Id = s.Shoplist_Id " +
+                                    "WHERE s.User_Id = @UserId";
+
+                using (MySqlCommand command = new MySqlCommand(sqlRequest, connection))
+                {
+                    command.Parameters.AddWithValue("@UserId", userId);
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Carts cart = new Carts
+                            {
+                                Shoplist_Id = Convert.ToInt32(reader["Shoplist_Id"]),
+                                Product_Id = Convert.ToInt32(reader["Product_Id"]),
+                                Cart_Total = Convert.ToInt32(reader["Cart_Total"]),
+                                Cart_ProductCount = Convert.ToInt32(reader["Cart_ProductCount"])
+                            };
+                            carts.Add(cart);
+                        }
+                    }
+                }
             }
 
-        return carts;
+            return carts;
         }
+
+        private IEnumerable<Invoices> HttpGetInvoicesByUserId(int userId)
+        {
+            List<Invoices> invoices = new List<Invoices>();
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                // Utilisez une requête SQL avec une jointure pour récupérer les factures liées au User_Id
+                string sqlRequest = "SELECT i.* FROM invoices i " +
+                                    "JOIN commands c ON i.Command_Id = c.Command_Id " +
+                                    "JOIN shoplists s ON c.Shoplist_Id = s.Shoplist_Id " +
+                                    "WHERE s.User_Id = @UserId";
+
+                using (MySqlCommand command = new MySqlCommand(sqlRequest, connection))
+                {
+                    command.Parameters.AddWithValue("@UserId", userId);
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Invoices invoice = new Invoices
+                            {
+                                Invoices_Id = Convert.ToInt32(reader["Invoices_Id"]),
+                                Command_Id = Convert.ToInt32(reader["Command_Id"]),
+                                Invoice_Date = Convert.ToDateTime(reader["Invoice_Date"]).ToString("yyyy-MM-dd")
+                            };
+                            invoices.Add(invoice);
+                        }
+                    }
+                }
+            }
+
+            return invoices;
+        }
+
+
 
         private Users HttpGetUserById(int id)
         {
