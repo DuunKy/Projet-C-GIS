@@ -173,7 +173,7 @@ namespace Controllers
             // HTTP PATCH
 
 
-            else if (request.HttpMethod == "PATCH" && request.Url.PathAndQuery.StartsWith("/api/users/"))
+            else if (request.HttpMethod == "PATCH" && request.Url.PathAndQuery.StartsWith("/api/products/"))
             {
                 string[] strings = request.Url.PathAndQuery.Split('/');
                 string[] parts = strings; // sépare notre URL sur les "/"
@@ -185,22 +185,23 @@ namespace Controllers
                     using (var reader = new StreamReader(request.InputStream, request.ContentEncoding))
                     {
                         string requestBody = reader.ReadToEnd(); // permet de lire le body de la requete postman json
-                        var data = JsonSerializer.Deserialize<Users>(requestBody); //ici data accede au body
+                        var data = JsonSerializer.Deserialize<Products>(requestBody); //ici data accede au body
                         
-                        string firstName = data.User_FirstName;
-                        string lastName = data.User_LastName;
-                        string email = data.User_Email;
-                        string password = data.User_Password;
-                        string phone = data.User_Phone;
+                            string name = data.Product_Name;
+                            string description = data.Product_Description;
+                            string type = data.Product_Type;
+                            int numberLeft = data.Product_NumberLeft;
+                            int price = data.Product_Price;
 
-                        if (firstName == null && lastName == null && email == null && password == null && phone == null)
+
+                        if (name == null && description == null && type == null && numberLeft == null && price == null)
                         {
                             responseString = "bad body";
                         }
                         else
                         {
                             var options = new JsonSerializerOptions { WriteIndented = true };
-                            responseString = JsonSerializer.Serialize(HttpPatchUserById(id, firstName, lastName, email, password, phone), options);
+                            responseString = JsonSerializer.Serialize(HttpPatchProductById(id, name, description, type, numberLeft, price), options);
                         }
                     }
                     }
@@ -214,7 +215,7 @@ namespace Controllers
                 {
                     responseString = "bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
                 }
-                else if (request.Url.PathAndQuery == "/api/users/")
+                else if (request.Url.PathAndQuery == "/api/products/")
                 {
                     responseString = "enter an id please, bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
                 }
@@ -230,7 +231,7 @@ namespace Controllers
 
 
 
-        private string HttpPatchUserById(int id, string firstName, string lastName, string email, string password, string phone)
+        private string HttpPatchProductById(int id, string name, string description, string type, int numberLeft, int price)
         {
             try
             {
@@ -239,33 +240,36 @@ namespace Controllers
                     connection.Open();
 
                     // cette requete permet de mettre a jour seulement les champs non vide
-                    string SqlRequest = "UPDATE users SET ";
+                    string SqlRequest = "UPDATE products SET ";
 
                     List<string> updates = new List<string>();
 
-                    if (!string.IsNullOrEmpty(firstName))
+                    string ToStringNumberLeft = numberLeft.ToString();
+                    string ToStringPrice = price.ToString();
+
+                    if (!string.IsNullOrEmpty(name))
                     {
-                        updates.Add("User_FirstName = @FirstName");
+                        updates.Add("Product_Name = @Name");
                     }
-                    if (!string.IsNullOrEmpty(lastName))
+                    if (!string.IsNullOrEmpty(description))
                     {
-                        updates.Add("User_LastName = @LastName");
+                        updates.Add("Product_Description = @Description");
                     }
-                    if (!string.IsNullOrEmpty(email))
+                    if (!string.IsNullOrEmpty(type))
                     {
-                        updates.Add("User_Email = @Email");
+                        updates.Add("Product_Type = @Type");
                     }
-                    if (!string.IsNullOrEmpty(password))
+                    if (!string.IsNullOrEmpty(ToStringNumberLeft))
                     {
-                        updates.Add("User_Password = @Password");
+                        updates.Add("Product_NumberLeft = @NumberLeft");
                     }
-                    if (!string.IsNullOrEmpty(phone))
+                    if (!string.IsNullOrEmpty(ToStringPrice))
                     {
-                        updates.Add("User_Phone = @Phone");
+                        updates.Add("Product_Price = @Price");
                     }
 
                     SqlRequest += string.Join(", ", updates);
-                    SqlRequest += " WHERE User_Id = @UserId";
+                    SqlRequest += " WHERE Product_Id = @ProductId";
 
                     //ici on fait des collages pour avoir notre requete sql
 
@@ -273,18 +277,18 @@ namespace Controllers
 
                     using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                     {
-                        command.Parameters.AddWithValue("@UserId", id);
-                        command.Parameters.AddWithValue("@FirstName", firstName);
-                        command.Parameters.AddWithValue("@LastName", lastName);
-                        command.Parameters.AddWithValue("@Email", email);
-                        command.Parameters.AddWithValue("@Password", password);
-                        command.Parameters.AddWithValue("@Phone", phone);
+                        command.Parameters.AddWithValue("@ProductId", id);
+                        command.Parameters.AddWithValue("@Name", name);
+                        command.Parameters.AddWithValue("@Description", description);
+                        command.Parameters.AddWithValue("@Type", type);
+                        command.Parameters.AddWithValue("@NumberLeft", numberLeft);
+                        command.Parameters.AddWithValue("@Price", price);
 
                         int rowsAffected = command.ExecuteNonQuery();
 
                         if (rowsAffected > 0)
                         {
-                            return "Patch success! User updated!";
+                            return "Patch success! Product updated!";
                         }
                         else
                         {
