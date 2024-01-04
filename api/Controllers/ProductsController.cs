@@ -14,7 +14,6 @@ namespace Controllers
     {
         private string connectionString = "Server=localhost;User ID=root;Password=azerty;Database=newschema";
         // mes identifiants pour me connect a mon mysql workbench
-        private List<Users> products;
 
 // TODO: 
 // gener mieux la connection sql = 1 connection
