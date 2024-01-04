@@ -414,7 +414,7 @@ namespace Controllers
 
                         if (rowsAffected > 0)
                         {
-                            return "Its work! Post mis a jour! ";
+                            return "Its work! User mis a jour! ";
                         }
                         else
                         {

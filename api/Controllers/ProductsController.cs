@@ -99,7 +99,7 @@ namespace Controllers
 
             //PUT
 
-            else if (request.HttpMethod == "PUT" && request.Url.PathAndQuery.StartsWith("/api/users/"))
+            else if (request.HttpMethod == "PUT" && request.Url.PathAndQuery.StartsWith("/api/products/"))
             {
                 string[] strings = request.Url.PathAndQuery.Split('/');
                 string[] parts = strings; // separe notre url sur les "/"
@@ -110,17 +110,17 @@ namespace Controllers
                         using (var reader = new StreamReader(request.InputStream, request.ContentEncoding))
                         {
                             string requestBody = reader.ReadToEnd(); // permet de lire le body de la requete postman json
-                            var data = JsonSerializer.Deserialize<Users>(requestBody); //ici data accede au body
+                            var data = JsonSerializer.Deserialize<Products>(requestBody); //ici data accede au body
 
-                            string firstName = data.User_FirstName;
-                            string lastName = data.User_LastName;
-                            string email = data.User_Email;
-                            string password = data.User_Password;
-                            string phone = data.User_Phone;
+                            string name = data.Product_Name;
+                            string description = data.Product_Description;
+                            string type = data.Product_Type;
+                            int numberLeft = data.Product_NumberLeft;
+                            int price = data.Product_Price;
 
                             
                             var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                            responseString = JsonSerializer.Serialize(HttpPutUserById(id, firstName, lastName, email, password, phone), options);
+                            responseString = JsonSerializer.Serialize(HttpPutProductById(id, name, description, type, numberLeft, price), options);
                         }
                     }
                     catch (Exception ex)
@@ -376,7 +376,7 @@ namespace Controllers
         }
 
 
-        private string HttpPutUserById(int id, string firstName, string lastName, string email, string password, string phone)
+        private string HttpPutProductById(int id, string name, string description, string type, int numberLeft, int price)
         {
             //Put = Update, ou crée si existe pas
 
@@ -387,30 +387,31 @@ namespace Controllers
             {
                 connection.Open();
 
-                string SqlRequest = "UPDATE users SET User_FirstName = @FirstName, User_LastName = @LastName, User_Email = @Email, User_Password = @Password, User_Phone = @Phone WHERE User_Id = @UserId"; // ma query SQL
+                string SqlRequest = "UPDATE products SET Product_Name = @Name, Product_Description = @Description, Product_Type = @Type, Product_NumberLeft = @NumberLeft, Product_Price = @Price WHERE Product_Id = @ProductId"; // ma query SQL
 
                 using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                 {
-                    command.Parameters.AddWithValue("@UserId", id);
-                    command.Parameters.AddWithValue("@FirstName", firstName);
-                    command.Parameters.AddWithValue("@LastName", lastName);
-                    command.Parameters.AddWithValue("@Email", email); 
-                    command.Parameters.AddWithValue("@Password", password);
-                    command.Parameters.AddWithValue("@Phone", phone);
+                    command.Parameters.AddWithValue("@ProductId", id);
+                    command.Parameters.AddWithValue("@Name", name);
+                    command.Parameters.AddWithValue("@Description", description);
+                    command.Parameters.AddWithValue("@Type", type); 
+                    command.Parameters.AddWithValue("@NumberLeft", numberLeft);
+                    command.Parameters.AddWithValue("@Price", price);
 
                     // permet d'envoyé des données dans la query par un @ en C#
 
                    int rowsAffected = command.ExecuteNonQuery();
 
                         if (rowsAffected > 0)
+
                         {
-                            return "Its work! Post mis a jour! ";
+                            return "Its work! Product mis a jour! ";
                         }
                         else
                         {
-                            //cree un user sur le haut de la liste si aucun id atribué
-                           //FIXME: // HttpPostNewProduct(firstName, lastName, email, password, phone);
-                            return "This Id is empty, New User created";
+                            //cree un product sur le haut de la liste si aucun id atribué
+                            HttpPostNewProduct(name, description, type, numberLeft, price);
+                            return "This Id is empty, New Product created";
                         }
                     }
                 }
