@@ -79,20 +79,20 @@ namespace Controllers
             // POST
 
 
-            else if (request.HttpMethod == "POST" && request.Url.PathAndQuery == "/api/users")
+            else if (request.HttpMethod == "POST" && request.Url.PathAndQuery == "/api/products")
             {
                 using (var reader = new StreamReader(request.InputStream, request.ContentEncoding))
                 {
                     string requestBody = reader.ReadToEnd(); // permet de lire le body de la requete postman json
-                    var data = JsonSerializer.Deserialize<Users>(requestBody); //ici data accede au body
+                    var data = JsonSerializer.Deserialize<Products>(requestBody); //ici data accede au body
 
-                    string firstName = data.User_FirstName;
-                    string lastName = data.User_LastName;
-                    string email = data.User_Email;
-                    string password = data.User_Password;
-                    string phone = data.User_Phone;
+                    string name = data.Product_Name;
+                    string description = data.Product_Description;
+                    string type = data.Product_Type;
+                    int numberLeft = data.Product_NumberLeft;
+                    int price = data.Product_Price;
 
-                    responseString = HttpPostNewUser(firstName, lastName, email, password, phone);
+                    responseString = HttpPostNewProduct(name, description, type, numberLeft, price);
                 }
             }
 
@@ -301,7 +301,7 @@ namespace Controllers
         }
 
 
-        private string HttpPostNewUser(string firstName, string lastName, string email, string password, string phone)
+        private string HttpPostNewProduct(string name, string description, string type, int numberLeft , int price)
         {
             // sur postman, faire la requete avec un body contenant les infos ci dessus
             try
@@ -310,15 +310,15 @@ namespace Controllers
                 {
                     connection.Open();
 
-                    string SqlRequest = "INSERT INTO users (User_FirstName, User_LastName, User_Email, User_Password, User_Phone) VALUES (@FirstName, @LastName, @Email, @Password, @Phone)";
+                    string SqlRequest = "INSERT INTO products (Product_Name, Product_Description, Product_Type, Product_NumberLeft, Product_Price) VALUES (@Name, @Description, @Type, @NumberLeft, @Price)";
 
                     using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                     { // lie les @ a une string
-                        command.Parameters.AddWithValue("@FirstName", firstName);
-                        command.Parameters.AddWithValue("@LastName", lastName);
-                        command.Parameters.AddWithValue("@Email", email);
-                        command.Parameters.AddWithValue("@Password", password);
-                        command.Parameters.AddWithValue("@Phone", phone);
+                        command.Parameters.AddWithValue("@Name", name);
+                        command.Parameters.AddWithValue("@Description", description);
+                        command.Parameters.AddWithValue("@Type", type);
+                        command.Parameters.AddWithValue("@NumberLeft", numberLeft);
+                        command.Parameters.AddWithValue("@Price", price);
 
                         int rowsAffected = command.ExecuteNonQuery();
 
@@ -364,7 +364,7 @@ namespace Controllers
                                 Product_Name = reader["Product_Name"].ToString(),
                                 Product_Description = reader["Product_Description"].ToString(),
                                 Product_Type = reader["Product_Type"].ToString(),
-                                Product_NumberLeft = reader["Product_NumberLeft"].ToString(),
+                                Product_NumberLeft = Convert.ToInt32(reader["Product_NumberLeft"]),
                                 Product_Price = Convert.ToInt32(reader["Product_Price"]),
                             };
                             products.Add(product);
@@ -409,7 +409,7 @@ namespace Controllers
                         else
                         {
                             //cree un user sur le haut de la liste si aucun id atribué
-                            HttpPostNewUser(firstName, lastName, email, password, phone);
+                           //FIXME: // HttpPostNewProduct(firstName, lastName, email, password, phone);
                             return "This Id is empty, New User created";
                         }
                     }
@@ -449,7 +449,7 @@ namespace Controllers
                                 Product_Name = reader["Product_Name"].ToString(),
                                 Product_Description = reader["Product_Description"].ToString(),
                                 Product_Type = reader["Product_Type"].ToString(),
-                                Product_NumberLeft = reader["Product_NumberLeft"].ToString(),
+                                Product_NumberLeft = Convert.ToInt32(reader["Product_NumberLeft"]),
                                 Product_Price = Convert.ToInt32(reader["Product_Price"]),
                             };
                         }
@@ -486,7 +486,7 @@ namespace Controllers
                                 Product_Name = reader["Product_Name"].ToString(),
                                 Product_Description = reader["Product_Description"].ToString(),
                                 Product_Type = reader["Product_Type"].ToString(),
-                                Product_NumberLeft = reader["Product_NumberLeft"].ToString(),
+                                Product_NumberLeft = Convert.ToInt32(reader["Product_NumberLeft"]),
                                 Product_Price = Convert.ToInt32(reader["Product_Price"]),
                             };
                         }
@@ -523,7 +523,7 @@ namespace Controllers
                                 Product_Name = reader["Product_Name"].ToString(),
                                 Product_Description = reader["Product_Description"].ToString(),
                                 Product_Type = reader["Product_Type"].ToString(),
-                                Product_NumberLeft = reader["Product_NumberLeft"].ToString(),
+                                Product_NumberLeft = Convert.ToInt32(reader["Product_NumberLeft"]),
                                 Product_Price = Convert.ToInt32(reader["Product_Price"]),
                             };
                             products.Add(product);
