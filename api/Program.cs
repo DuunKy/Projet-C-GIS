@@ -88,6 +88,16 @@ class SimpleHttpServer
             responseString = new Controllers.CartsController().ProcessRequest(request);
         }
 
+        else if (request.Url.AbsolutePath.StartsWith("/api/commands")) // tchek si l'url commence avec api/users
+        {
+            responseString = new Controllers.CommandsController().ProcessRequest(request);
+        }
+
+        else if (request.Url.AbsolutePath.StartsWith("/api/invoices")) // tchek si l'url commence avec api/users
+        {
+            responseString = new Controllers.InvoicesController().ProcessRequest(request);
+        }
+
         else
         {
             responseString = "Invalid endpoint, Error =  " + (int)HttpStatusCode.NotFound;
