@@ -67,9 +67,15 @@ class SimpleHttpServer
             var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
             responseString = "The api is running!  " + (int)HttpStatusCode.OK ;
         }
+
         else if (request.Url.AbsolutePath.StartsWith("/api/users")) // tchek si l'url commence avec api/users
         {
             responseString = new Controllers.UsersController().ProcessRequest(request);
+        }
+
+        else if (request.Url.AbsolutePath.StartsWith("/api/products")) // tchek si l'url commence avec api/users
+        {
+            responseString = new Controllers.ProductsController().ProcessRequest(request);
         }
         else
         {

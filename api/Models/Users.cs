@@ -1,6 +1,6 @@
 namespace Models
 {
-        public class Users
+    public class Users
     {
         public int User_Id { get; set; }
         public string User_FirstName { get; set; }
