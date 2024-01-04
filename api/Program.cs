@@ -83,6 +83,11 @@ class SimpleHttpServer
             responseString = new Controllers.ShoplistsController().ProcessRequest(request);
         }
 
+        else if (request.Url.AbsolutePath.StartsWith("/api/carts")) // tchek si l'url commence avec api/users
+        {
+            responseString = new Controllers.CartsController().ProcessRequest(request);
+        }
+
         else
         {
             responseString = "Invalid endpoint, Error =  " + (int)HttpStatusCode.NotFound;
