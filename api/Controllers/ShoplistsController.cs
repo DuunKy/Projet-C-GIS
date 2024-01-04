@@ -37,7 +37,7 @@ namespace Controllers
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                    responseString = JsonSerializer.Serialize(HttpGetProductById(id), options);
+                    responseString = JsonSerializer.Serialize(HttpGetShoplistById(id), options);
                     if (responseString == "null")
                     {
                     responseString = "Invalid id, Error =  " + (int)HttpStatusCode.BadRequest;
@@ -48,31 +48,15 @@ namespace Controllers
                 {
                     responseString = "bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
                 }
-                else if (request.Url.PathAndQuery == "/api/products/")
+                else if (request.Url.PathAndQuery == "/api/shoplists/")
                 {
                     responseString = "enter a id please, bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
                 }
                 else
                 {
-                    string myEndPointString = parts[3];
-
-                        var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-
-                        responseString = JsonSerializer.Serialize(HttpGetProductByName(myEndPointString), options);
-
-
-                        if (responseString == "null")
-                        {
-                            responseString = JsonSerializer.Serialize(HttpGetAllProductByType(myEndPointString), options);    
-                        }
-                        
-                        
-                        if (responseString == "null")
-                        {
-                        responseString = "Invalid Name or Type of products, Error =  " + (int)HttpStatusCode.BadRequest;
-                        } 
-                    
+                    responseString = "not a id, please enter a valid id";
                 }
+
             }
 
             // POST
@@ -227,6 +211,10 @@ namespace Controllers
             //final return
             return responseString;
         }
+
+
+
+
 
 
 
@@ -423,41 +411,37 @@ namespace Controllers
         }
 
 
-        private Products HttpGetProductById(int id)
+        private Shoplists HttpGetShoplistById(int id)
         {
             
-        Products product = null;
+        Shoplists shoplist = null;
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
 
-                string SqlRequest = "SELECT * FROM products WHERE Product_Id = @ProductId"; // ma query SQL
+                string SqlRequest = "SELECT * FROM shoplists WHERE Shoplist_Id = @ShoplistId"; // ma query SQL
 
                 using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                 {
-                    command.Parameters.AddWithValue("@ProductId", id); 
+                    command.Parameters.AddWithValue("@ShoplistId", id); 
                     // permet d'envoyé des données dans la query par un @ en C#
 
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            product = new Products
+                            shoplist = new Shoplists
                             {
-                                Product_Id = Convert.ToInt32(reader["Product_Id"]),
-                                Product_Name = reader["Product_Name"].ToString(),
-                                Product_Description = reader["Product_Description"].ToString(),
-                                Product_Type = reader["Product_Type"].ToString(),
-                                Product_NumberLeft = Convert.ToInt32(reader["Product_NumberLeft"]),
-                                Product_Price = Convert.ToInt32(reader["Product_Price"]),
+                                Shoplist_Id = Convert.ToInt32(reader["Shoplist_Id"]),
+                                User_Id = Convert.ToInt32(reader["User_Id"])
                             };
                         }
                     }
                 }
             }
 
-            return product;
+            return shoplist;
         }
 
         private Products HttpGetProductByName(string name)

@@ -43,6 +43,22 @@ namespace Controllers
                     }
 
                 }
+
+                if (parts.Length == 5 && parts[4] == "shoplists" && int.TryParse(parts[3], out int myId))
+                    {
+                        var options = new JsonSerializerOptions { WriteIndented = true };
+                        var shoplists = HttpGetShoplistByUserId(myId);
+
+                        if (shoplists.Any())
+                        {
+                            responseString = JsonSerializer.Serialize(shoplists, options);
+                        }
+                        else
+                        {
+                            responseString = "Invalid id or no shoplists found, Error = " + (int)HttpStatusCode.BadRequest;
+                        }
+                    }
+                                    
                 else if (parts.Length > 4)
                 {
                     responseString = "bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
@@ -430,6 +446,49 @@ namespace Controllers
             }
         }
 
+
+        private IEnumerable<Shoplists> HttpGetShoplistByUserId(int id)
+        {
+            
+        List<Shoplists> shoplists = new List<Shoplists>();
+
+            try
+            {
+
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string SqlRequest = "SELECT * FROM shoplists WHERE User_Id = @UserId"; // ma query SQL
+
+                    using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
+                    {
+                        command.Parameters.AddWithValue("@UserId", id); 
+                        // permet d'envoyé des données dans la query par un @ en C#
+
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Shoplists shoplist = new Shoplists
+                                {
+                                    Shoplist_Id = Convert.ToInt32(reader["Shoplist_Id"]),
+                                    User_Id = Convert.ToInt32(reader["User_Id"])
+                                };
+                                shoplists.Add(shoplist);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception
+                Console.WriteLine($"Error during shop list retrieval: {ex.Message}");
+            }
+
+        return shoplists;
+        }
 
         private Users HttpGetUserById(int id)
         {
