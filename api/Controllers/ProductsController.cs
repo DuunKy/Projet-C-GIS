@@ -95,6 +95,11 @@ namespace Controllers
                 }
             }
 
+            else if (request.HttpMethod == "POST" && request.Url.PathAndQuery.StartsWith("/api/products"))
+            {
+                responseString = "bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
+            }
+
 
             //PUT
 

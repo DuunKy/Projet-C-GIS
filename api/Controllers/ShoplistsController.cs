@@ -62,21 +62,21 @@ namespace Controllers
             // POST
 
 
-            else if (request.HttpMethod == "POST" && request.Url.PathAndQuery == "/api/products")
+            else if (request.HttpMethod == "POST" && request.Url.PathAndQuery == "/api/shoplists")
             {
                 using (var reader = new StreamReader(request.InputStream, request.ContentEncoding))
                 {
                     string requestBody = reader.ReadToEnd(); // permet de lire le body de la requete postman json
-                    var data = JsonSerializer.Deserialize<Products>(requestBody); //ici data accede au body
+                    var data = JsonSerializer.Deserialize<Shoplists>(requestBody); //ici data accede au body
 
-                    string name = data.Product_Name;
-                    string description = data.Product_Description;
-                    string type = data.Product_Type;
-                    int numberLeft = data.Product_NumberLeft;
-                    int price = data.Product_Price;
+                    int userId = data.User_Id;
 
-                    responseString = HttpPostNewProduct(name, description, type, numberLeft, price);
+                    responseString = HttpPostNewShoplist(userId);
                 }
+            }
+            else if (request.HttpMethod == "POST" && request.Url.PathAndQuery.StartsWith("/api/shoplists"))
+            {
+                responseString = "bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
             }
 
 
@@ -292,7 +292,7 @@ namespace Controllers
         }
 
 
-        private string HttpPostNewProduct(string name, string description, string type, int numberLeft , int price)
+        private string HttpPostNewShoplist(int userId)
         {
             // sur postman, faire la requete avec un body contenant les infos ci dessus
             try
@@ -301,15 +301,11 @@ namespace Controllers
                 {
                     connection.Open();
 
-                    string SqlRequest = "INSERT INTO products (Product_Name, Product_Description, Product_Type, Product_NumberLeft, Product_Price) VALUES (@Name, @Description, @Type, @NumberLeft, @Price)";
+                    string SqlRequest = "INSERT INTO shoplists (User_Id) VALUES (@UserId)";
 
                     using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                     { // lie les @ a une string
-                        command.Parameters.AddWithValue("@Name", name);
-                        command.Parameters.AddWithValue("@Description", description);
-                        command.Parameters.AddWithValue("@Type", type);
-                        command.Parameters.AddWithValue("@NumberLeft", numberLeft);
-                        command.Parameters.AddWithValue("@Price", price);
+                        command.Parameters.AddWithValue("@UserId", userId);
 
                         int rowsAffected = command.ExecuteNonQuery();
 
@@ -397,7 +393,7 @@ namespace Controllers
                         else
                         {
                             //cree un product sur le haut de la liste si aucun id atribué
-                            HttpPostNewProduct(name, description, type, numberLeft, price);
+                            //FIXME: // HttpPostNewShoplist(idUser);
                             return "This Id is empty, New Product created";
                         }
                     }
@@ -444,80 +440,6 @@ namespace Controllers
             return shoplist;
         }
 
-        private Products HttpGetProductByName(string name)
-        {
-            
-        Products product = null;
-
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                connection.Open();
-
-                string SqlRequest = "SELECT * FROM products WHERE Product_Name = @ProductName"; // ma query SQL
-
-                using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
-                {
-                    command.Parameters.AddWithValue("@ProductName", name); 
-                    // permet d'envoyé des données dans la query par un @ en C#
-
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            product = new Products
-                            {
-                                Product_Id = Convert.ToInt32(reader["Product_Id"]),
-                                Product_Name = reader["Product_Name"].ToString(),
-                                Product_Description = reader["Product_Description"].ToString(),
-                                Product_Type = reader["Product_Type"].ToString(),
-                                Product_NumberLeft = Convert.ToInt32(reader["Product_NumberLeft"]),
-                                Product_Price = Convert.ToInt32(reader["Product_Price"]),
-                            };
-                        }
-                    }
-                }
-            }
-
-            return product;
-        }
-
-        private IEnumerable<Products> HttpGetAllProductByType(string type)
-        {
-            
-        List<Products> products = new List<Products>();
-
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-            {
-                connection.Open();
-
-                string SqlRequest = "SELECT * FROM products WHERE Product_Type = @ProductType"; // ma query SQL
-
-                using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
-                {
-                    command.Parameters.AddWithValue("@ProductType", type); 
-                    // permet d'envoyé des données dans la query par un @ en C#
-
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                             Products product = new Products
-                            {
-                                Product_Id = Convert.ToInt32(reader["Product_Id"]),
-                                Product_Name = reader["Product_Name"].ToString(),
-                                Product_Description = reader["Product_Description"].ToString(),
-                                Product_Type = reader["Product_Type"].ToString(),
-                                Product_NumberLeft = Convert.ToInt32(reader["Product_NumberLeft"]),
-                                Product_Price = Convert.ToInt32(reader["Product_Price"]),
-                            };
-                            products.Add(product);
-                        }
-                    }
-                }
-            }
-
-            return products;
-        }
 
         private string HttpDelProductById(int id)
         {

@@ -116,6 +116,10 @@ namespace Controllers
                     responseString = HttpPostNewUser(firstName, lastName, email, password, phone);
                 }
             }
+            else if (request.HttpMethod == "POST" && request.Url.PathAndQuery.StartsWith("/api/users"))
+            {
+                responseString = "bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
+            }
 
 
             //PUT
