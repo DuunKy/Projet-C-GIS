@@ -6,3 +6,4 @@
 
 [ ] - Gerer l'api pour toutes les tables disponibles
 [ ] - Trouver un moyens de généraliser les controllers
+[ ] - pb d'exeption lors d'un mauvais body entre dans les POST a gerer.

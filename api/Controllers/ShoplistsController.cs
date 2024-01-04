@@ -82,7 +82,7 @@ namespace Controllers
 
             //PUT
 
-            else if (request.HttpMethod == "PUT" && request.Url.PathAndQuery.StartsWith("/api/products/"))
+            else if (request.HttpMethod == "PUT" && request.Url.PathAndQuery.StartsWith("/api/shoplists/"))
             {
                 string[] strings = request.Url.PathAndQuery.Split('/');
                 string[] parts = strings; // separe notre url sur les "/"
@@ -93,17 +93,13 @@ namespace Controllers
                         using (var reader = new StreamReader(request.InputStream, request.ContentEncoding))
                         {
                             string requestBody = reader.ReadToEnd(); // permet de lire le body de la requete postman json
-                            var data = JsonSerializer.Deserialize<Products>(requestBody); //ici data accede au body
+                            var data = JsonSerializer.Deserialize<Shoplists>(requestBody); //ici data accede au body
 
-                            string name = data.Product_Name;
-                            string description = data.Product_Description;
-                            string type = data.Product_Type;
-                            int numberLeft = data.Product_NumberLeft;
-                            int price = data.Product_Price;
+                            int userId = data.User_Id;
 
                             
                             var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                            responseString = JsonSerializer.Serialize(HttpPutProductById(id, name, description, type, numberLeft, price), options);
+                            responseString = JsonSerializer.Serialize(HttpPutShoplistById(id, userId), options);
                         }
                     }
                     catch (Exception ex)
@@ -117,7 +113,7 @@ namespace Controllers
                 {
                     responseString = "bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
                 }
-                else if (request.Url.PathAndQuery == "/api/users/")
+                else if (request.Url.PathAndQuery == "/api/shoplists/")
                 {
                     responseString = "enter a id please, bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
                 }
@@ -129,21 +125,21 @@ namespace Controllers
 
             //DELETE
 
-            else if (request.HttpMethod == "DELETE" && request.Url.PathAndQuery.StartsWith("/api/products/"))
+            else if (request.HttpMethod == "DELETE" && request.Url.PathAndQuery.StartsWith("/api/shoplists/"))
             {
                 string[] strings = request.Url.PathAndQuery.Split('/');
                 string[] parts = strings; // separe notre url sur les "/"
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                    responseString = JsonSerializer.Serialize(HttpDelProductById(id), options);
+                    responseString = JsonSerializer.Serialize(HttpDelShoplistById(id), options);
 
                 }
                 else if (parts.Length > 4)
                 {
                     responseString = "bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
                 }
-                else if (request.Url.PathAndQuery == "/api/products/")
+                else if (request.Url.PathAndQuery == "/api/shoplists/")
                 {
                     responseString = "enter a id please, bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
                 }
@@ -156,7 +152,7 @@ namespace Controllers
             // HTTP PATCH
 
 
-            else if (request.HttpMethod == "PATCH" && request.Url.PathAndQuery.StartsWith("/api/products/"))
+            else if (request.HttpMethod == "PATCH" && request.Url.PathAndQuery.StartsWith("/api/shoplists/"))
             {
                 string[] strings = request.Url.PathAndQuery.Split('/');
                 string[] parts = strings; // sépare notre URL sur les "/"
@@ -168,23 +164,19 @@ namespace Controllers
                     using (var reader = new StreamReader(request.InputStream, request.ContentEncoding))
                     {
                         string requestBody = reader.ReadToEnd(); // permet de lire le body de la requete postman json
-                        var data = JsonSerializer.Deserialize<Products>(requestBody); //ici data accede au body
+                        var data = JsonSerializer.Deserialize<Shoplists>(requestBody); //ici data accede au body
                         
-                            string name = data.Product_Name;
-                            string description = data.Product_Description;
-                            string type = data.Product_Type;
-                            int numberLeft = data.Product_NumberLeft;
-                            int price = data.Product_Price;
+                            int userId = data.User_Id;
 
 
-                        if (name == null && description == null && type == null && numberLeft == null && price == null)
+                        if (userId == null)
                         {
                             responseString = "bad body";
                         }
                         else
                         {
                             var options = new JsonSerializerOptions { WriteIndented = true };
-                            responseString = JsonSerializer.Serialize(HttpPatchProductById(id, name, description, type, numberLeft, price), options);
+                            responseString = JsonSerializer.Serialize(HttpPatchShoplistById(id, userId), options);
                         }
                     }
                     }
@@ -198,7 +190,7 @@ namespace Controllers
                 {
                     responseString = "bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
                 }
-                else if (request.Url.PathAndQuery == "/api/products/")
+                else if (request.Url.PathAndQuery == "/api/shoplists/")
                 {
                     responseString = "enter an id please, bad endpoint, Error =  " + (int)HttpStatusCode.BadRequest;
                 }
@@ -218,7 +210,7 @@ namespace Controllers
 
 
 
-        private string HttpPatchProductById(int id, string name, string description, string type, int numberLeft, int price)
+        private string HttpPatchShoplistById(int id, int userId)
         {
             try
             {
@@ -227,36 +219,19 @@ namespace Controllers
                     connection.Open();
 
                     // cette requete permet de mettre a jour seulement les champs non vide
-                    string SqlRequest = "UPDATE products SET ";
+                    string SqlRequest = "UPDATE shoplists SET ";
 
                     List<string> updates = new List<string>();
 
-                    string ToStringNumberLeft = numberLeft.ToString();
-                    string ToStringPrice = price.ToString();
+                    string ToStringUserId = userId.ToString();
 
-                    if (!string.IsNullOrEmpty(name))
+                    if (!string.IsNullOrEmpty(ToStringUserId))
                     {
-                        updates.Add("Product_Name = @Name");
-                    }
-                    if (!string.IsNullOrEmpty(description))
-                    {
-                        updates.Add("Product_Description = @Description");
-                    }
-                    if (!string.IsNullOrEmpty(type))
-                    {
-                        updates.Add("Product_Type = @Type");
-                    }
-                    if (!string.IsNullOrEmpty(ToStringNumberLeft))
-                    {
-                        updates.Add("Product_NumberLeft = @NumberLeft");
-                    }
-                    if (!string.IsNullOrEmpty(ToStringPrice))
-                    {
-                        updates.Add("Product_Price = @Price");
+                        updates.Add("User_Id = @UserId");
                     }
 
                     SqlRequest += string.Join(", ", updates);
-                    SqlRequest += " WHERE Product_Id = @ProductId";
+                    SqlRequest += " WHERE Shoplist_Id = @ShoplistId";
 
                     //ici on fait des collages pour avoir notre requete sql
 
@@ -264,12 +239,8 @@ namespace Controllers
 
                     using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                     {
-                        command.Parameters.AddWithValue("@ProductId", id);
-                        command.Parameters.AddWithValue("@Name", name);
-                        command.Parameters.AddWithValue("@Description", description);
-                        command.Parameters.AddWithValue("@Type", type);
-                        command.Parameters.AddWithValue("@NumberLeft", numberLeft);
-                        command.Parameters.AddWithValue("@Price", price);
+                        command.Parameters.AddWithValue("@ShoplistId", id);
+                        command.Parameters.AddWithValue("@UserId", userId);
 
                         int rowsAffected = command.ExecuteNonQuery();
 
@@ -291,7 +262,7 @@ namespace Controllers
             }
         }
 
-
+        //FIXME: pb d'exeption lors d'un mauvais body entre dans la nouvelle shoplist a gerer.
         private string HttpPostNewShoplist(int userId)
         {
             // sur postman, faire la requete avec un body contenant les infos ci dessus
@@ -359,7 +330,7 @@ namespace Controllers
         }
 
 
-        private string HttpPutProductById(int id, string name, string description, string type, int numberLeft, int price)
+        private string HttpPutShoplistById(int id, int userId)
         {
             //Put = Update, ou crée si existe pas
 
@@ -370,16 +341,12 @@ namespace Controllers
             {
                 connection.Open();
 
-                string SqlRequest = "UPDATE products SET Product_Name = @Name, Product_Description = @Description, Product_Type = @Type, Product_NumberLeft = @NumberLeft, Product_Price = @Price WHERE Product_Id = @ProductId"; // ma query SQL
+                string SqlRequest = "UPDATE shoplists SET User_Id = @UserId WHERE Shoplist_Id = @ShoplistId"; // ma query SQL
 
                 using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                 {
-                    command.Parameters.AddWithValue("@ProductId", id);
-                    command.Parameters.AddWithValue("@Name", name);
-                    command.Parameters.AddWithValue("@Description", description);
-                    command.Parameters.AddWithValue("@Type", type); 
-                    command.Parameters.AddWithValue("@NumberLeft", numberLeft);
-                    command.Parameters.AddWithValue("@Price", price);
+                    command.Parameters.AddWithValue("@UserId", userId);
+                    command.Parameters.AddWithValue("@ShoplistId", id);
 
                     // permet d'envoyé des données dans la query par un @ en C#
 
@@ -393,7 +360,7 @@ namespace Controllers
                         else
                         {
                             //cree un product sur le haut de la liste si aucun id atribué
-                            //FIXME: // HttpPostNewShoplist(idUser);
+                            HttpPostNewShoplist(userId);
                             return "This Id is empty, New Product created";
                         }
                     }
@@ -441,7 +408,7 @@ namespace Controllers
         }
 
 
-        private string HttpDelProductById(int id)
+        private string HttpDelShoplistById(int id)
         {
 
             try
@@ -450,18 +417,18 @@ namespace Controllers
                 {
                     connection.Open();
 
-                    string SqlRequest = "DELETE FROM products WHERE Product_Id = @ProductId"; // ma query SQL
+                    string SqlRequest = "DELETE FROM shoplists WHERE Shoplist_Id = @ShoplistId"; // ma query SQL
 
                     using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                     {
-                        command.Parameters.AddWithValue("@ProductId", id); 
+                        command.Parameters.AddWithValue("@ShoplistId", id); 
                         // permet d'envoyé des données dans la query par un @ en C#
 
                         int rowsAffected = command.ExecuteNonQuery();
 
                         if (rowsAffected > 0)
                         {
-                            return "Its work! Product supprimer! ";
+                            return "Its work! Shoplist supprimer! ";
                         }
                         else
                         {
