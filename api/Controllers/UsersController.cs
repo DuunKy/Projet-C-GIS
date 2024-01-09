@@ -548,6 +548,8 @@ namespace Controllers
                 connection.Open();
 
                 // Utilisez une requête SQL avec une jointure pour récupérer les commandes liées au User_Id
+
+                //sql name broken sorry that why "c" "s"
                 string sqlRequest = "SELECT c.* FROM commands c " +
                                     "JOIN shoplists s ON c.Shoplist_Id = s.Shoplist_Id " +
                                     "WHERE s.User_Id = @UserId";
@@ -585,6 +587,8 @@ namespace Controllers
                 connection.Open();
 
                 // Utilisez une requête SQL avec une jointure pour récupérer les carts liés au User_Id
+
+                //sql name broken sorry that why "c" "s"
                 string sqlRequest = "SELECT c.* FROM carts c " +
                                     "JOIN shoplists s ON c.Shoplist_Id = s.Shoplist_Id " +
                                     "WHERE s.User_Id = @UserId";
@@ -622,6 +626,8 @@ namespace Controllers
                 connection.Open();
 
                 // Utilisez une requête SQL avec une jointure pour récupérer les factures liées au User_Id
+
+                //sql name broken sorry that why "c" "s"
                 string sqlRequest = "SELECT i.* FROM invoices i " +
                                     "JOIN commands c ON i.Command_Id = c.Command_Id " +
                                     "JOIN shoplists s ON c.Shoplist_Id = s.Shoplist_Id " +
