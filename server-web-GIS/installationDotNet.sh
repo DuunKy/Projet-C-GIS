@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 apt-get update && apt upgrade -y && apt-get install -y wget && apt-get install -y sudo && apt-get install -y nano
 wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
