@@ -1,6 +1,6 @@
 #!/bin/bash
 
-apt-get update && apt upgrade -y && apt-get install -y wget && apt-get install -y sudo && apt-get install -y nano
+apt-get update && apt upgrade -y && apt-get install -y wget && apt-get install -y sudo
 wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 sudo dpkg -i packages-microsoft-prod.deb
 rm packages-microsoft-prod.deb
