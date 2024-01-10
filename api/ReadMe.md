@@ -1,6 +1,7 @@
 # pour lancer l'api localement =
 
-# DL mysql workbench
+# DL mysql client/workbench
+Lancer mysql workbench.
 Configurer sa session avec "Server=localhost;User ID=root;Password=azerty;Database=newschema"
 en bas a gauche cliquer sur administration, data/import, cocher "import drom self contain file", cliquer sur "new",
 et donner le nom newschema a la db importer (mydatabasegood.sql dans le dossier database).
