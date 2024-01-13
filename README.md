@@ -19,6 +19,9 @@ Our Github: https://github.com/DuunKy/Projet-C-GIS
 Our trello: https://trello.com/invite/b/L78yAKCT/ATTI5c790d2beb05c064e996e08f4a62f40eFC1B8ED9/projet-c
 Our Postman: https://app.getpostman.com/join-team?invite_code=e33bbf89c4080c120b3fac1a2ec72bf9&target_code=d39e99bc428fa0d95c69a83c7ce353c5
 
+Local test with mysql workbench and postman agent:
+
+dotnet run --project server-web-GIS/API
 
 For a more advance documentation on the API, tchek "Documentation/ApiDocumentation.pdf"
 
