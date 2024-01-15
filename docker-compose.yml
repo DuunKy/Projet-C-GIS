@@ -22,26 +22,10 @@ services:
     container_name: server-web-GIS
     ports:
       - "8080:8080" 
-      - "9000:80"
+      - "8000:80"
     networks:
       my_network:
         ipv4_address: 172.16.238.11
-
-  phpmyadmin:
-    image: phpmyadmin
-    ports:
-      - "8000:8080"
-    networks:
-      my_network:
-        ipv4_address: 172.16.238.12
-        
-  adminer:
-    image: adminer
-    ports:
-      - "8001:8080"
-    networks:
-      my_network:
-        ipv4_address: 172.16.238.13
         
 networks:
   my_network:

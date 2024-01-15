@@ -3,7 +3,7 @@ WORKDIR /
 # RUN mkdir /API
 COPY index.html /usr/share/nginx/html/
 COPY installationDotNet.sh /
-COPY api /API
+COPY API /API
 ADD installationDotNet.sh /docker-entrypoint.d
 RUN chmod +x /docker-entrypoint.d/installationDotNet.sh
 RUN /docker-entrypoint.d/installationDotNet.sh

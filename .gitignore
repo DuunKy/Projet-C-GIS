@@ -7,9 +7,4 @@
 /dataSources/
 /dataSources.local.xml
 
-.idea/
-.gradle/
-build/
-*.xml
-obj/
-models/
+Projet-C-GIS.sln

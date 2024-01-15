@@ -30,7 +30,8 @@ class SimpleHttpServer
     {
         listener.Start();
         Console.WriteLine("Server started. Listening for requests...");
-        Console.WriteLine("http://localhost:8080/");
+		// To check status of the api directly the minute all runs in the terminal
+        Console.WriteLine("http://localhost:8080/api/status");
 
         while (true)
         {
