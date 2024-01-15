@@ -1,7 +1,7 @@
 # Projet-C-GIS
 
 Welcome to our C# api, with a web-serveur and a serveur for the mysql database build on a Docker.
-This project is made with love by Duncan LHUILLERY, Iliane ANONYMUS, and Thibaut FIGUEIRA.
+This project is made with love by Duncan LHUILLERY, Liliane DABO, and Thibaut FIGUEIRA.
 
 This is a project free of right. You can use it has you wish if you integre our names. Thanks for your reading.
 
