@@ -1,552 +1,309 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
+-- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 14, 2023 at 09:11 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
+-- Host: localhost    Database: newschema
+-- ------------------------------------------------------
+-- Server version	8.0.35
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Database: `e_commerce`
---
-CREATE DATABASE IF NOT EXISTS `dunkyandfilscorporation` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `dunkyandfilscorporation`;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `address`
+-- Table structure for table `addresses`
 --
 
-CREATE TABLE `address` (
-  `uid_Address` int(11) NOT NULL,
-  `email_Address` varchar(255) NOT NULL,
-  `phone_number_Address` varchar(11) DEFAULT NULL,
-  `address_Address` text DEFAULT NULL,
-  `postal_code_Address` int(11) DEFAULT NULL,
-  `city_Address` text DEFAULT NULL
+DROP TABLE IF EXISTS `addresses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `addresses` (
+  `Address_Address` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `Address_CityName` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `Address_PostalCode` int NOT NULL,
+  `Address_State` varchar(80) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Address_Country` varchar(80) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `User_Id` int NOT NULL,
+  KEY `Fk_User_Id` (`User_Id`),
+  CONSTRAINT `Fk_User_Id` FOREIGN KEY (`User_Id`) REFERENCES `users` (`User_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `address`
+-- Dumping data for table `addresses`
 --
 
-INSERT INTO `address` (`uid_Address`, `email_Address`, `phone_number_Address`, `address_Address`, `postal_code_Address`, `city_Address`) VALUES
-(1, '+76gGKuWLtQTyMZsUsQjxRerFlZ4rE64k2EApO6qiZs=', 'sDH0+Ndq+Ed', 'b0SshgyqovXAnu24irAsYOX8+nziz/3jDyRlfpt0AlWV+ZMimG08lIprOHIeO46w', 21147, 'Port Idellamouth'),
-(2, 'xrD8EIz+qViGVyHLgyUNTC62cfnX6Nw2j5Y3flIYR2g=', 'B4ZrW1w78z/', 'xNRY+ofNvrKS9TeFy4388sA04RbjMhHu4bTqPWaqEmOezKL3KB0XswPgiToT3gwa', 53838, 'East Geovannimouth'),
-(3, 'Q1hvsjjFohnISdmoI0BbNSKpc/E2t4h+QF93WwUDBAM=', 'LqAOs9+89tf', 'LsKMLcl5hqsLafNUj+36Vq55H4lWn68cwkwUyDp1EbGLEa/Ec1SN8hF3mhQgn8OXVibJc+so5qu3Bjspnf6p4Q==', 39356, 'Bergstromstad');
-
--- --------------------------------------------------------
+LOCK TABLES `addresses` WRITE;
+/*!40000 ALTER TABLE `addresses` DISABLE KEYS */;
+INSERT INTO `addresses` VALUES ('495 Celine Forge Apt. 691\nNorth Ted, WY 70376','Ernserside',91018,'New Mexico','Seychelles',1),('40258 Kozey Crest Suite 089\nAgustinashire, WI 49922-1515','New Orvalville',8807,'New York','Liechtenstein',2),('485 Esteban Lake Apt. 427\nHuelsfurt, OK 04307','Vickiechester',80628,'South Carolina','Malta',3),('6485 Gregg Passage\nEast Jaren, NJ 41140','Littelton',26774,'New Jersey','Switzerland',4),('74561 Roman Shores Suite 888\nLake Kenshire, NV 01741','Darwinstad',49858,'Arizona','Sudan',5),('42574 Lorena Crossing Suite 816\nDeanland, MN 84647-9360','Camdenborough',25603,'Florida','Uzbekistan',6),('1974 Destiney Valleys\nBergnaumfurt, GA 12587','Rogahnfort',49829,'Missouri','Montenegro',7),('2952 Lolita Camp\nSusanatown, TN 84602-0511','Dickinsonfort',19356,'Georgia','Cape Verde',8),('37039 Wisozk Mission Suite 517\nPort Norristown, MS 53578','Kristoferborough',53899,'Ohio','Mauritius',9),('24346 Torp Corner Apt. 022\nHudsonbury, CA 74402','Reginaldburgh',34723,'Pennsylvania','Suriname',10);
+/*!40000 ALTER TABLE `addresses` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `cart`
+-- Table structure for table `carts`
 --
 
-CREATE TABLE `cart` (
-  `uid_Cart` int(11) NOT NULL,
-  `content_Cart` text DEFAULT NULL,
-  `uid_Command` bigint(20) DEFAULT NULL
+DROP TABLE IF EXISTS `carts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `carts` (
+  `Shoplist_Id` int DEFAULT NULL,
+  `Product_Id` int DEFAULT NULL,
+  `Cart_Total` int NOT NULL,
+  `Cart_ProductCount` int NOT NULL,
+  KEY `Shoplist_Id` (`Shoplist_Id`),
+  KEY `Product_Id` (`Product_Id`),
+  CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`Shoplist_Id`) REFERENCES `shoplists` (`Shoplist_Id`),
+  CONSTRAINT `carts_ibfk_2` FOREIGN KEY (`Product_Id`) REFERENCES `products` (`Product_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `cart`
+-- Dumping data for table `carts`
 --
 
-INSERT INTO `cart` (`uid_Cart`, `content_Cart`, `uid_Command`) VALUES
-(1, 'Nostrum nihil porro ad temporibus sit.', NULL),
-(2, 'Sunt earum ad provident consequuntur quidem.', NULL),
-(3, 'Voluptas sint et sit quia nulla velit.', 3);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `choose`
---
-
-CREATE TABLE `choose` (
-  `uid_Customer` int(11) NOT NULL,
-  `uid_Product` int(11) NOT NULL,
-  `product_img_Photo` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+LOCK TABLES `carts` WRITE;
+/*!40000 ALTER TABLE `carts` DISABLE KEYS */;
+INSERT INTO `carts` VALUES (1,1,221,7),(1,1,117,23),(1,3,61,14),(4,4,105,16),(4,2,330,17),(1,6,349,7),(1,7,36,22),(1,3,358,6),(7,1,447,6),(10,4,50,33);
+/*!40000 ALTER TABLE `carts` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Dumping data for table `choose`
+-- Table structure for table `commands`
 --
 
-INSERT INTO `choose` (`uid_Customer`, `uid_Product`, `product_img_Photo`) VALUES
-(1, 1, 'http://lorempixel.com/640/480/?43427'),
-(2, 3, 'http://lorempixel.com/640/480/?33352'),
-(3, 2, 'http://lorempixel.com/640/480/?99597');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `command`
---
-
-CREATE TABLE `command` (
-  `uid_Command` bigint(20) NOT NULL,
-  `date_Command` date DEFAULT NULL,
-  `status_Command` varchar(9) DEFAULT NULL,
-  `shipping_info_Command` text DEFAULT NULL,
-  `uid_Cart` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `commands`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `commands` (
+  `Command_Id` int NOT NULL AUTO_INCREMENT,
+  `Shoplist_Id` int DEFAULT NULL,
+  `Command_OrderDate` date NOT NULL,
+  PRIMARY KEY (`Command_Id`),
+  KEY `Shoplist_Id` (`Shoplist_Id`),
+  CONSTRAINT `commands_ibfk_1` FOREIGN KEY (`Shoplist_Id`) REFERENCES `shoplists` (`Shoplist_Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `command`
+-- Dumping data for table `commands`
 --
 
-INSERT INTO `command` (`uid_Command`, `date_Command`, `status_Command`, `shipping_info_Command`, `uid_Cart`) VALUES
-(1, '1982-07-06', 'shipped', 'Sunt nobis quidem facilis voluptas doloribus.', NULL),
-(2, '1970-02-02', 'delivered', 'Quis explicabo qui culpa illo voluptatem non et.', NULL),
-(3, '1991-11-09', 'shipped', 'Occaecati quia accusantium voluptatibus.', 3);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `e_create`
---
-
-CREATE TABLE `e_create` (
-  `uid_Command` bigint(20) NOT NULL,
-  `uid_Cart` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `e_create`
---
-
-INSERT INTO `e_create` (`uid_Command`, `uid_Cart`) VALUES
-(1, NULL),
-(2, NULL),
-(3, 3);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `e_use`
---
-
-CREATE TABLE `e_use` (
-  `uid_Customer` int(11) NOT NULL,
-  `uid_Rate` int(11) NOT NULL,
-  `uid_Product` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `e_use`
---
-
-INSERT INTO `e_use` (`uid_Customer`, `uid_Rate`, `uid_Product`) VALUES
-(1, 1, 1),
-(2, 2, 1),
-(3, 3, 3);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `e_user`
---
-
-CREATE TABLE `e_user` (
-  `uid_Customer` int(11) NOT NULL,
-  `username_User` varchar(30) DEFAULT NULL,
-  `password_User` text DEFAULT NULL,
-  `first_name_Customer` varchar(30) DEFAULT NULL,
-  `last_name_Customer` varchar(30) DEFAULT NULL,
-  `status_Customer` varchar(7) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `e_user`
---
-
-INSERT INTO `e_user` (`uid_Customer`, `username_User`, `password_User`, `first_name_Customer`, `last_name_Customer`, `status_Customer`) VALUES
-(1, 'Wiegand.Rodolfo', 'OSNligQQF4qV+Vb1/hHCKCQn93fwE9eFnfD08z4swtk=', 'Leanne', '5duhA8aySC8VmQLnjh1dDA==', 'online'),
-(2, 'Orie48', 'gHlYqVn7vDG1uKbfy0ZK6w==', 'Ward', '4XzQx7kfGkR0i18u8vjTbw==', 'online'),
-(3, 'Libby55', '0evpwYJHCdJtPP2p7ZXXuQ==', 'Wiley', '33i+nd0h0d4DWjUEskP+bw==', 'offline');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `fill`
---
-
-CREATE TABLE `fill` (
-  `uid_Command` bigint(20) NOT NULL,
-  `credit_cardNB_Payment` varchar(255) NOT NULL,
-  `email_Address` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `fill`
---
-
-INSERT INTO `fill` (`uid_Command`, `credit_cardNB_Payment`, `email_Address`) VALUES
-(1, 'rm0sUhsOwDjlCRyO8ScMhQ==', '+76gGKuWLtQTyMZsUsQjxRerFlZ4rE64k2EApO6qiZs='),
-(2, '0TNh5TU5D9PewbadJ3E2sg==', 'xrD8EIz+qViGVyHLgyUNTC62cfnX6Nw2j5Y3flIYR2g='),
-(3, 'gwX3Thz8jWgw8DK7N69mwg==', 'Q1hvsjjFohnISdmoI0BbNSKpc/E2t4h+QF93WwUDBAM=');
-
--- --------------------------------------------------------
+LOCK TABLES `commands` WRITE;
+/*!40000 ALTER TABLE `commands` DISABLE KEYS */;
+INSERT INTO `commands` VALUES (1,1,'1983-05-21'),(2,2,'2017-06-11'),(3,3,'1979-05-13'),(4,4,'2011-04-23'),(5,5,'2021-01-18'),(6,6,'2003-07-06'),(7,7,'1970-01-12'),(8,8,'1983-12-27'),(9,9,'1992-02-25'),(10,10,'2001-11-10');
+/*!40000 ALTER TABLE `commands` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `invoices`
 --
 
+DROP TABLE IF EXISTS `invoices`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `invoices` (
-  `uid_Invoices` int(11) NOT NULL,
-  `uid_Product` int(11) NOT NULL,
-  `name_Product` varchar(30) DEFAULT NULL,
-  `price_Product` float DEFAULT NULL,
-  `uid_Customer` int(11) NOT NULL,
-  `quantity_Invoices` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `Invoices_Id` int NOT NULL AUTO_INCREMENT,
+  `Command_Id` int DEFAULT NULL,
+  `Invoice_Date` date NOT NULL,
+  PRIMARY KEY (`Invoices_Id`),
+  KEY `Command_Id` (`Command_Id`),
+  CONSTRAINT `invoices_ibfk_1` FOREIGN KEY (`Command_Id`) REFERENCES `commands` (`Command_Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `invoices`
 --
 
-INSERT INTO `invoices` (`uid_Invoices`, `uid_Product`, `name_Product`, `price_Product`, `uid_Customer`, `quantity_Invoices`) VALUES
-(1, 2, 'vel', 740.22, 1, 3),
-(2, 3, 'et', 864.86, 3, 2),
-(3, 1, 'laudantium', 757.98, 3, 6);
-
--- --------------------------------------------------------
+LOCK TABLES `invoices` WRITE;
+/*!40000 ALTER TABLE `invoices` DISABLE KEYS */;
+INSERT INTO `invoices` VALUES (1,1,'1984-11-02'),(2,2,'1998-10-27'),(3,3,'2018-11-15'),(4,4,'2010-07-01'),(5,5,'2010-03-11'),(6,6,'2020-02-17'),(7,7,'1972-07-23'),(8,8,'1971-12-23'),(9,9,'1987-10-11'),(10,10,'2001-02-14');
+/*!40000 ALTER TABLE `invoices` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `own`
+-- Table structure for table `payements`
 --
 
-CREATE TABLE `own` (
-  `uid_Customer` int(11) NOT NULL,
-  `uid_Cart` int(11) NOT NULL,
-  `email_Address` varchar(255) NOT NULL,
-  `credit_cardNB_Payment` varchar(255) NOT NULL
+DROP TABLE IF EXISTS `payements`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `payements` (
+  `User_Id` int DEFAULT NULL,
+  `Payement_CartNumber` int NOT NULL,
+  `Payement_ExpirationDate` date NOT NULL,
+  `Payement_Name` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `Payement_SafeCode` int NOT NULL,
+  KEY `User_Id` (`User_Id`),
+  CONSTRAINT `payements_ibfk_1` FOREIGN KEY (`User_Id`) REFERENCES `users` (`User_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `own`
+-- Dumping data for table `payements`
 --
 
-INSERT INTO `own` (`uid_Customer`, `uid_Cart`, `email_Address`, `credit_cardNB_Payment`) VALUES
-(1, 1, '+76gGKuWLtQTyMZsUsQjxRerFlZ4rE64k2EApO6qiZs=', 'rm0sUhsOwDjlCRyO8ScMhQ=='),
-(2, 2, 'xrD8EIz+qViGVyHLgyUNTC62cfnX6Nw2j5Y3flIYR2g=', '0TNh5TU5D9PewbadJ3E2sg=='),
-(3, 3, 'Q1hvsjjFohnISdmoI0BbNSKpc/E2t4h+QF93WwUDBAM=', 'gwX3Thz8jWgw8DK7N69mwg==');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `payment`
---
-
-CREATE TABLE `payment` (
-  `uid_Payment` int(11) NOT NULL,
-  `credit_cardNB_Payment` varchar(255) NOT NULL,
-  `credit_Card_Type_Payment` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+LOCK TABLES `payements` WRITE;
+/*!40000 ALTER TABLE `payements` DISABLE KEYS */;
+INSERT INTO `payements` VALUES (1,79539,'2018-03-21','Ortiz',79642164),(2,79673,'2010-01-14','Rogahn',170078),(3,12774794,'2004-09-03','Armstrong',78895),(4,97488946,'1975-03-28','Mosciski',4979799),(5,8119,'1972-11-15','Bartoletti',1113303),(6,79,'1992-09-13','Krajcik',57254885),(7,858,'1973-12-27','Skiles',7999519),(8,0,'1994-07-12','Connelly',8),(9,187653,'2019-09-21','Sanford',832),(10,315428,'2014-06-12','Feil',3776);
+/*!40000 ALTER TABLE `payements` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Dumping data for table `payment`
+-- Table structure for table `photos`
 --
 
-INSERT INTO `payment` (`uid_Payment`, `credit_cardNB_Payment`, `credit_Card_Type_Payment`) VALUES
-(1, 'rm0sUhsOwDjlCRyO8ScMhQ==', 'AHRhrD6P9Ru1rB6dssCDTw=='),
-(2, '0TNh5TU5D9PewbadJ3E2sg==', 'AHRhrD6P9Ru1rB6dssCDTw=='),
-(3, 'gwX3Thz8jWgw8DK7N69mwg==', '6C9TWmGAE3F3IXTwS6eHFQ==');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `photo`
---
-
-CREATE TABLE `photo` (
-  `uid_Photo` int(11) NOT NULL,
-  `product_img_Photo` varchar(255) NOT NULL,
-  `avatar_img_Photo` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `photo`
---
-
-INSERT INTO `photo` (`uid_Photo`, `product_img_Photo`, `avatar_img_Photo`) VALUES
-(1, 'http://lorempixel.com/640/480/?43427', 'http://lorempixel.com/640/480/?23100'),
-(2, 'http://lorempixel.com/640/480/?99597', 'http://lorempixel.com/640/480/?19537'),
-(3, 'http://lorempixel.com/640/480/?33352', 'http://lorempixel.com/640/480/?90141');
-
--- --------------------------------------------------------
+DROP TABLE IF EXISTS `photos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `photos` (
+  `User_Id` int DEFAULT NULL,
+  `Product_Id` int DEFAULT NULL,
+  `Photo_Photo` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `Photo_Id` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`Photo_Id`),
+  KEY `User_Id` (`User_Id`),
+  KEY `Product_Id` (`Product_Id`),
+  CONSTRAINT `photos_ibfk_1` FOREIGN KEY (`User_Id`) REFERENCES `users` (`User_Id`),
+  CONSTRAINT `photos_ibfk_2` FOREIGN KEY (`Product_Id`) REFERENCES `products` (`Product_Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `product`
+-- Dumping data for table `photos`
 --
 
-CREATE TABLE `product` (
-  `uid_Product` int(11) NOT NULL,
-  `name_Product` varchar(30) DEFAULT NULL,
-  `description_Product` text DEFAULT NULL,
-  `price_Product` float DEFAULT NULL,
-  `stock_Product` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+LOCK TABLES `photos` WRITE;
+/*!40000 ALTER TABLE `photos` DISABLE KEYS */;
+INSERT INTO `photos` VALUES (1,NULL,'South Eldora.jpeg',1),(NULL,1,'New Delphine.jpeg',2),(NULL,3,'East Tyriquemouth.jpeg',3),(1,NULL,'Cecileport.jpeg',4),(NULL,2,'West Noble.jpeg',5),(3,NULL,'Aidenhaven.jpeg',6),(NULL,7,'Lake Shaunberg.jpeg',7),(7,NULL,'New Ursulahaven.jpeg',8),(5,NULL,'North Newell.jpeg',9),(3,NULL,'North Tyrelborough.jpeg',10);
+/*!40000 ALTER TABLE `photos` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Dumping data for table `product`
+-- Table structure for table `products`
 --
 
-INSERT INTO `product` (`uid_Product`, `name_Product`, `description_Product`, `price_Product`, `stock_Product`) VALUES
-(1, 'laudantium', 'Ipsam sequi facilis sed.', 757.98, 12439),
-(2, 'vel', 'Consectetur sit eveniet id dolor et tempora.', 740.22, 51567),
-(3, 'et', 'Ut ducimus voluptatem distinctio adipisci.', 864.86, 49274);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `rate`
---
-
-CREATE TABLE `rate` (
-  `uid_Rate` int(11) NOT NULL,
-  `uid_Product` int(11) NOT NULL,
-  `uid_Customer` int(11) NOT NULL,
-  `rating_Rate` int(11) DEFAULT NULL,
-  `review_Rate` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `products`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `products` (
+  `Product_Id` int NOT NULL AUTO_INCREMENT,
+  `Product_Name` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `Product_Description` varchar(120) COLLATE utf8mb4_general_ci NOT NULL,
+  `Product_Type` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `Product_Price` int NOT NULL,
+  `Product_NumberLeft` int NOT NULL,
+  PRIMARY KEY (`Product_Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `rate`
+-- Dumping data for table `products`
 --
 
-INSERT INTO `rate` (`uid_Rate`, `uid_Product`, `uid_Customer`, `rating_Rate`, `review_Rate`) VALUES
-(1, 1, 1, 2, 'Qui voluptatem quo et voluptatem.'),
-(2, 1, 2, 4, 'Id at numquam cumque cupiditate.'),
-(3, 3, 3, 3, 'Velit numquam consequatur quo ipsum similique et.');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `store`
---
-
-CREATE TABLE `store` (
-  `uid_Command` bigint(20) NOT NULL,
-  `uid_Invoices` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+LOCK TABLES `products` WRITE;
+/*!40000 ALTER TABLE `products` DISABLE KEYS */;
+INSERT INTO `products` VALUES (1,'beer','Voluptatem iure magni sed nam et nulla. Nisi reprehenderit ipsum est esse. Mollitia nostrum earum velit qui id corporis ','PaleVioletRed',808669476,830472),(2,'thiel','Tempora voluptatem nobis maiores nam quae. Vitae quibusdam fugit culpa esse. Minima animi error eaque accusantium et exc','Peru',39,16587062),(3,'denesik','Maiores dignissimos sint sequi molestiae numquam numquam laboriosam. Nobis harum commodi sunt nostrum sint iusto. Volupt','LightSteelBlue',0,865383),(4,'greenholt','Et deserunt quod non nostrum aperiam. Voluptates ad nisi placeat non doloremque repellendus iure. Eum sapiente sint vel ','DodgerBlue',812,14363),(5,'rempel','Cumque dolor veritatis quae consequatur eius illum. Sapiente velit explicabo dolor facere consequatur. Quis quod quia re','Maroon',56156635,86),(6,'frami','Illum voluptas consequatur et velit sit. Voluptatem et asperiores ullam labore ea. Consequatur consequatur voluptatem es','PowderBlue',17013,45012),(7,'marquardt','Consectetur accusantium quia nobis sed. Pariatur non et dolores soluta. Tenetur quaerat optio quae perspiciatis. Corpori','LightCyan',9,915961461),(8,'roberts','Omnis sequi laboriosam quo unde dolores. Rerum ut assumenda quod sint eos. Non id quibusdam explicabo placeat.','Peru',6032,277698926),(9,'gusikowski','Est illo rem quaerat quis suscipit voluptatem eaque eaque. Sunt ipsa est ut et pariatur aut ullam. At maiores qui quis n','LightSkyBlue',2665,412007354),(10,'reichel','Sit alias minus rem perferendis nihil dignissimos fugiat numquam. Voluptas natus vel fuga non. Et illo numquam dicta err','LightGray',67009,77733);
+/*!40000 ALTER TABLE `products` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Dumping data for table `store`
+-- Table structure for table `rates`
 --
 
-INSERT INTO `store` (`uid_Command`, `uid_Invoices`) VALUES
-(1, '1'),
-(2, '2'),
-(3, '3');
+DROP TABLE IF EXISTS `rates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rates` (
+  `Rate_Rate` int NOT NULL,
+  `User_Id` int DEFAULT NULL,
+  `Product_Id` int DEFAULT NULL,
+  `Rate_Id` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`Rate_Id`),
+  KEY `User_Id` (`User_Id`),
+  KEY `Product_Id` (`Product_Id`),
+  CONSTRAINT `rates_ibfk_1` FOREIGN KEY (`User_Id`) REFERENCES `users` (`User_Id`),
+  CONSTRAINT `rates_ibfk_2` FOREIGN KEY (`Product_Id`) REFERENCES `products` (`Product_Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Indexes for dumped tables
+-- Dumping data for table `rates`
 --
 
---
--- Indexes for table `address`
---
-ALTER TABLE `address`
-  ADD PRIMARY KEY (`uid_Address`,`email_Address`);
+LOCK TABLES `rates` WRITE;
+/*!40000 ALTER TABLE `rates` DISABLE KEYS */;
+INSERT INTO `rates` VALUES (4,1,1,1),(1,1,1,2),(5,2,3,3),(1,1,4,4),(4,5,2,5),(3,3,6,6),(4,2,7,7),(1,7,3,8),(2,5,1,9),(4,3,4,10);
+/*!40000 ALTER TABLE `rates` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Indexes for table `cart`
---
-ALTER TABLE `cart`
-  ADD PRIMARY KEY (`uid_Cart`),
-  ADD KEY `FK_Cart_uid_Command` (`uid_Command`);
-
---
--- Indexes for table `choose`
---
-ALTER TABLE `choose`
-  ADD PRIMARY KEY (`uid_Customer`,`uid_Product`,`product_img_Photo`);
-
---
--- Indexes for table `command`
---
-ALTER TABLE `command`
-  ADD PRIMARY KEY (`uid_Command`),
-  ADD KEY `FK_Command_uid_Cart` (`uid_Cart`);
-
---
--- Indexes for table `e_create`
---
-ALTER TABLE `e_create`
-  ADD PRIMARY KEY (`uid_Command`);
-
---
--- Indexes for table `e_use`
---
-ALTER TABLE `e_use`
-  ADD PRIMARY KEY (`uid_Customer`,`uid_Rate`,`uid_Product`);
-
---
--- Indexes for table `e_user`
---
-ALTER TABLE `e_user`
-  ADD PRIMARY KEY (`uid_Customer`);
-
---
--- Indexes for table `fill`
---
-ALTER TABLE `fill`
-  ADD PRIMARY KEY (`uid_Command`,`credit_cardNB_Payment`,`email_Address`);
-
---
--- Indexes for table `invoices`
---
-ALTER TABLE `invoices`
-  ADD PRIMARY KEY (`uid_Invoices`,`uid_Product`);
-
---
--- Indexes for table `own`
---
-ALTER TABLE `own`
-  ADD PRIMARY KEY (`uid_Customer`,`uid_Cart`,`email_Address`,`credit_cardNB_Payment`);
-
---
--- Indexes for table `payment`
---
-ALTER TABLE `payment`
-  ADD PRIMARY KEY (`uid_Payment`,`credit_cardNB_Payment`);
-
---
--- Indexes for table `photo`
---
-ALTER TABLE `photo`
-  ADD PRIMARY KEY (`uid_Photo`,`product_img_Photo`);
-
---
--- Indexes for table `product`
---
-ALTER TABLE `product`
-  ADD PRIMARY KEY (`uid_Product`);
-
---
--- Indexes for table `rate`
---
-ALTER TABLE `rate`
-  ADD PRIMARY KEY (`uid_Rate`,`uid_Product`,`uid_Customer`);
-
---
--- Indexes for table `store`
---
-ALTER TABLE `store`
-  ADD PRIMARY KEY (`uid_Command`,`uid_Invoices`);
-
---
--- AUTO_INCREMENT for dumped tables
+-- Table structure for table `shoplists`
 --
 
---
--- AUTO_INCREMENT for table `address`
---
-ALTER TABLE `address`
-  MODIFY `uid_Address` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+DROP TABLE IF EXISTS `shoplists`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `shoplists` (
+  `Shoplist_Id` int NOT NULL AUTO_INCREMENT,
+  `User_Id` int DEFAULT NULL,
+  PRIMARY KEY (`Shoplist_Id`),
+  KEY `User_Id` (`User_Id`),
+  CONSTRAINT `shoplists_ibfk_1` FOREIGN KEY (`User_Id`) REFERENCES `users` (`User_Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- AUTO_INCREMENT for table `cart`
---
-ALTER TABLE `cart`
-  MODIFY `uid_Cart` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `choose`
---
-ALTER TABLE `choose`
-  MODIFY `uid_Customer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `command`
---
-ALTER TABLE `command`
-  MODIFY `uid_Command` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `e_use`
---
-ALTER TABLE `e_use`
-  MODIFY `uid_Customer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `e_user`
---
-ALTER TABLE `e_user`
-  MODIFY `uid_Customer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `invoices`
---
-ALTER TABLE `invoices`
-  MODIFY `uid_Invoices` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `own`
---
-ALTER TABLE `own`
-  MODIFY `uid_Customer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `payment`
---
-ALTER TABLE `payment`
-  MODIFY `uid_Payment` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `photo`
---
-ALTER TABLE `photo`
-  MODIFY `uid_Photo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `product`
---
-ALTER TABLE `product`
-  MODIFY `uid_Product` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `rate`
---
-ALTER TABLE `rate`
-  MODIFY `uid_Rate` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `store`
---
-ALTER TABLE `store`
-  MODIFY `uid_Command` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- Constraints for dumped tables
+-- Dumping data for table `shoplists`
 --
 
---
--- Constraints for table `cart`
---
-ALTER TABLE `cart`
-  ADD CONSTRAINT `FK_Cart_uid_Command` FOREIGN KEY (`uid_Command`) REFERENCES `command` (`uid_Command`);
+LOCK TABLES `shoplists` WRITE;
+/*!40000 ALTER TABLE `shoplists` DISABLE KEYS */;
+INSERT INTO `shoplists` VALUES (1,1),(2,2),(3,3),(4,4),(5,5),(6,6),(7,7),(8,8),(9,9),(10,10);
+/*!40000 ALTER TABLE `shoplists` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Constraints for table `command`
+-- Table structure for table `users`
 --
-ALTER TABLE `command`
-  ADD CONSTRAINT `FK_Command_uid_Cart` FOREIGN KEY (`uid_Cart`) REFERENCES `cart` (`uid_Cart`);
-COMMIT;
 
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `User_Id` int NOT NULL AUTO_INCREMENT,
+  `User_FirstName` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `User_LastName` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `User_Email` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `User_Password` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `User_Phone` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`User_Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'NouveauPrénom','NouveauNom','kling.kenneth@kilback.com','v9kEF&JrX@<*4X','+1 (952) 367-0147'),(2,'Bryce','Koelpin','ibogisich@schowalter.net','lagnqd>`+{~C&kw','407.570.5610'),(3,'Catherine','Stroman','queenie05@wisozk.com','ah.+hJ]<m','(386) 501-5060'),(4,'Burnice','Hessel','destin96@blick.com','mE\"LSA','434.784.9960'),(5,'duncanchanman','bbb','aaa','eee','06'),(6,'Bennie','Baumbach','maximillia26@hotmail.com','0A`^iDTva','+1-914-234-8198'),(7,'Sydnie','Gottlieb','cordelia.runolfsdottir@larson.com','{r%Ss.*^njWjz>_e)x','+1-364-383-8180'),(8,'Leone','Nikolaus','dickinson.sylvia@yahoo.com','+vs\"-a.n|','(360) 242-5232'),(9,'Rickie','Berge','bogisich.jennyfer@von.net','G2\"o8~VJu?<4.Ot','+17476684440'),(10,'Cielo','Kuvalis','rosanna94@gleason.com','uS04yS?g2Z*x','(820) 812-8297'),(11,'','','','',''),(12,'ccc','bbb','aaa','eee','06'),(13,'ccc','bbb','aaa','eee','06'),(14,'ccc','bbb','aaa','eee','06'),(15,'TRY','myname','yo@live.fr','eee','06'),(16,'OOO','bbb','aaa','eee','06'),(17,'TRY','bbb','aaa','eee','06'),(21,'OKITS','bbb','aaa','eee','06'),(22,'OKITS','bbb','aaa','eee','06'),(25,'tibo','bbb','aaa','eee','06'),(26,'OOO','bbb','aaa','eee','06');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2024-01-04 13:28:31
