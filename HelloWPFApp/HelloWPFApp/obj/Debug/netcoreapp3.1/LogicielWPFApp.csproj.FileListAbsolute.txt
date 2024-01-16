@@ -1,0 +1,53 @@
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\bin\Debug\netcoreapp3.1\LogicielWPFApp.exe
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\bin\Debug\netcoreapp3.1\LogicielWPFApp.deps.json
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\bin\Debug\netcoreapp3.1\LogicielWPFApp.runtimeconfig.json
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\bin\Debug\netcoreapp3.1\LogicielWPFApp.runtimeconfig.dev.json
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\bin\Debug\netcoreapp3.1\LogicielWPFApp.dll
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\bin\Debug\netcoreapp3.1\LogicielWPFApp.pdb
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.csproj.AssemblyReference.cache
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\BigMessage.g.cs
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\MainWindow.g.cs
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\SecondWindow.g.cs
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\App.g.cs
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp_MarkupCompile.cache
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp_MarkupCompile.lref
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\BigMessage.baml
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\MainWindow.baml
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\SecondWindow.baml
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.g.resources
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.AssemblyInfoInputs.cache
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.AssemblyInfo.cs
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.csproj.CoreCompileInputs.cache
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.csproj.CopyComplete
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.dll
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.pdb
+C:\Users\ADMIN\Desktop\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.genruntimeconfig.cache
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\bin\Debug\netcoreapp3.1\LogicielWPFApp.exe
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\bin\Debug\netcoreapp3.1\LogicielWPFApp.deps.json
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\bin\Debug\netcoreapp3.1\LogicielWPFApp.runtimeconfig.json
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\bin\Debug\netcoreapp3.1\LogicielWPFApp.runtimeconfig.dev.json
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\bin\Debug\netcoreapp3.1\LogicielWPFApp.dll
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\bin\Debug\netcoreapp3.1\LogicielWPFApp.pdb
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.csproj.AssemblyReference.cache
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\BigMessage.g.cs
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\MainWindow.g.cs
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\SecondWindow.g.cs
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\App.g.cs
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp_MarkupCompile.cache
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp_MarkupCompile.lref
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\BigMessage.baml
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\MainWindow.baml
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\SecondWindow.baml
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.g.resources
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.AssemblyInfoInputs.cache
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.AssemblyInfo.cs
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.csproj.CoreCompileInputs.cache
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.sourcelink.json
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.csproj.CopyComplete
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.dll
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.pdb
+C:\Users\ADMIN\Desktop\B2 Classes 09-06\S1\CSharp\Projet-C-GIS\HelloWPFApp\HelloWPFApp\obj\Debug\netcoreapp3.1\LogicielWPFApp.genruntimeconfig.cache
