@@ -25,7 +25,9 @@ Local test with mysql workbench and postman agent:
 
 dotnet run --project server-web-GIS/API
 
-For a more advance documentation on the API, tchek "Documentation/ApiDocumentation.pdf"
+For a more advance documentation on the API, tchek:
+- "Documentation/ApiDocumentation.pdf"
+- "Documentation/DockerDocumentation.pdf"
 
 # Token
 
