@@ -23,11 +23,11 @@ DROP TABLE IF EXISTS `addresses`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `addresses` (
-  `Address_Address` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
-  `Address_CityName` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `Address_Address` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Address_CityName` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Address_PostalCode` int NOT NULL,
-  `Address_State` varchar(80) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `Address_Country` varchar(80) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Address_State` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `Address_Country` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `User_Id` int NOT NULL,
   KEY `Fk_User_Id` (`User_Id`),
   CONSTRAINT `Fk_User_Id` FOREIGN KEY (`User_Id`) REFERENCES `users` (`User_Id`)
@@ -58,7 +58,7 @@ CREATE TABLE `carts` (
   `Cart_ProductCount` int NOT NULL,
   KEY `Shoplist_Id` (`Shoplist_Id`),
   KEY `Product_Id` (`Product_Id`),
-  CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`Shoplist_Id`) REFERENCES `shoplists` (`Shoplist_Id`),
+  CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`Shoplist_Id`) REFERENCES `shoplists` (`Shoplist_Id`) ON DELETE CASCADE,
   CONSTRAINT `carts_ibfk_2` FOREIGN KEY (`Product_Id`) REFERENCES `products` (`Product_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -69,7 +69,7 @@ CREATE TABLE `carts` (
 
 LOCK TABLES `carts` WRITE;
 /*!40000 ALTER TABLE `carts` DISABLE KEYS */;
-INSERT INTO `carts` VALUES (1,1,221,7),(1,1,117,23),(1,3,61,14),(4,4,105,16),(4,2,330,17),(1,6,349,7),(1,7,36,22),(1,3,358,6),(7,1,447,6),(10,4,50,33);
+INSERT INTO `carts` VALUES (4,4,105,16),(4,2,330,17),(11,7,85,5),(8,7,85,5),(12,7,85,5);
 /*!40000 ALTER TABLE `carts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -86,8 +86,8 @@ CREATE TABLE `commands` (
   `Command_OrderDate` date NOT NULL,
   PRIMARY KEY (`Command_Id`),
   KEY `Shoplist_Id` (`Shoplist_Id`),
-  CONSTRAINT `commands_ibfk_1` FOREIGN KEY (`Shoplist_Id`) REFERENCES `shoplists` (`Shoplist_Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  CONSTRAINT `commands_ibfk_1` FOREIGN KEY (`Shoplist_Id`) REFERENCES `shoplists` (`Shoplist_Id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -96,7 +96,7 @@ CREATE TABLE `commands` (
 
 LOCK TABLES `commands` WRITE;
 /*!40000 ALTER TABLE `commands` DISABLE KEYS */;
-INSERT INTO `commands` VALUES (1,1,'1983-05-21'),(2,2,'2017-06-11'),(3,3,'1979-05-13'),(4,4,'2011-04-23'),(5,5,'2021-01-18'),(6,6,'2003-07-06'),(7,7,'1970-01-12'),(8,8,'1983-12-27'),(9,9,'1992-02-25'),(10,10,'2001-11-10');
+INSERT INTO `commands` VALUES (1,1,'1983-05-21'),(2,2,'2017-06-11'),(3,3,'1979-05-13'),(4,4,'2011-04-23'),(5,5,'2021-01-18'),(6,6,'2003-07-06'),(8,8,'1983-12-27'),(9,9,'1992-02-25'),(11,9,'2011-05-21'),(13,11,'2011-05-21'),(14,9,'2011-05-21');
 /*!40000 ALTER TABLE `commands` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -113,8 +113,8 @@ CREATE TABLE `invoices` (
   `Invoice_Date` date NOT NULL,
   PRIMARY KEY (`Invoices_Id`),
   KEY `Command_Id` (`Command_Id`),
-  CONSTRAINT `invoices_ibfk_1` FOREIGN KEY (`Command_Id`) REFERENCES `commands` (`Command_Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  CONSTRAINT `invoices_ibfk_1` FOREIGN KEY (`Command_Id`) REFERENCES `commands` (`Command_Id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +123,7 @@ CREATE TABLE `invoices` (
 
 LOCK TABLES `invoices` WRITE;
 /*!40000 ALTER TABLE `invoices` DISABLE KEYS */;
-INSERT INTO `invoices` VALUES (1,1,'1984-11-02'),(2,2,'1998-10-27'),(3,3,'2018-11-15'),(4,4,'2010-07-01'),(5,5,'2010-03-11'),(6,6,'2020-02-17'),(7,7,'1972-07-23'),(8,8,'1971-12-23'),(9,9,'1987-10-11'),(10,10,'2001-02-14');
+INSERT INTO `invoices` VALUES (1,1,'1984-11-02'),(2,2,'1998-10-27'),(3,3,'2018-11-15'),(4,4,'2010-07-01'),(5,5,'2010-03-11'),(6,6,'2020-02-17'),(8,8,'1971-12-23'),(9,9,'1987-10-11'),(12,8,'2011-05-21');
 /*!40000 ALTER TABLE `invoices` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -138,7 +138,7 @@ CREATE TABLE `payements` (
   `User_Id` int DEFAULT NULL,
   `Payement_CartNumber` int NOT NULL,
   `Payement_ExpirationDate` date NOT NULL,
-  `Payement_Name` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `Payement_Name` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Payement_SafeCode` int NOT NULL,
   KEY `User_Id` (`User_Id`),
   CONSTRAINT `payements_ibfk_1` FOREIGN KEY (`User_Id`) REFERENCES `users` (`User_Id`)
@@ -165,7 +165,7 @@ DROP TABLE IF EXISTS `photos`;
 CREATE TABLE `photos` (
   `User_Id` int DEFAULT NULL,
   `Product_Id` int DEFAULT NULL,
-  `Photo_Photo` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `Photo_Photo` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Photo_Id` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`Photo_Id`),
   KEY `User_Id` (`User_Id`),
@@ -194,13 +194,13 @@ DROP TABLE IF EXISTS `products`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `products` (
   `Product_Id` int NOT NULL AUTO_INCREMENT,
-  `Product_Name` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
-  `Product_Description` varchar(120) COLLATE utf8mb4_general_ci NOT NULL,
-  `Product_Type` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `Product_Name` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Product_Description` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Product_Type` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Product_Price` int NOT NULL,
   `Product_NumberLeft` int NOT NULL,
   PRIMARY KEY (`Product_Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -209,7 +209,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'beer','Voluptatem iure magni sed nam et nulla. Nisi reprehenderit ipsum est esse. Mollitia nostrum earum velit qui id corporis ','PaleVioletRed',808669476,830472),(2,'thiel','Tempora voluptatem nobis maiores nam quae. Vitae quibusdam fugit culpa esse. Minima animi error eaque accusantium et exc','Peru',39,16587062),(3,'denesik','Maiores dignissimos sint sequi molestiae numquam numquam laboriosam. Nobis harum commodi sunt nostrum sint iusto. Volupt','LightSteelBlue',0,865383),(4,'greenholt','Et deserunt quod non nostrum aperiam. Voluptates ad nisi placeat non doloremque repellendus iure. Eum sapiente sint vel ','DodgerBlue',812,14363),(5,'rempel','Cumque dolor veritatis quae consequatur eius illum. Sapiente velit explicabo dolor facere consequatur. Quis quod quia re','Maroon',56156635,86),(6,'frami','Illum voluptas consequatur et velit sit. Voluptatem et asperiores ullam labore ea. Consequatur consequatur voluptatem es','PowderBlue',17013,45012),(7,'marquardt','Consectetur accusantium quia nobis sed. Pariatur non et dolores soluta. Tenetur quaerat optio quae perspiciatis. Corpori','LightCyan',9,915961461),(8,'roberts','Omnis sequi laboriosam quo unde dolores. Rerum ut assumenda quod sint eos. Non id quibusdam explicabo placeat.','Peru',6032,277698926),(9,'gusikowski','Est illo rem quaerat quis suscipit voluptatem eaque eaque. Sunt ipsa est ut et pariatur aut ullam. At maiores qui quis n','LightSkyBlue',2665,412007354),(10,'reichel','Sit alias minus rem perferendis nihil dignissimos fugiat numquam. Voluptas natus vel fuga non. Et illo numquam dicta err','LightGray',67009,77733);
+INSERT INTO `products` VALUES (1,'beer','Voluptatem iure magni sed nam et nulla. Nisi reprehenderit ipsum est esse. Mollitia nostrum earum velit qui id corporis ','PaleVioletRed',808669476,830472),(2,'thiel','Tempora voluptatem nobis maiores nam quae. Vitae quibusdam fugit culpa esse. Minima animi error eaque accusantium et exc','Peru',39,16587062),(3,'denesik','Maiores dignissimos sint sequi molestiae numquam numquam laboriosam. Nobis harum commodi sunt nostrum sint iusto. Volupt','LightSteelBlue',0,865383),(4,'greenholt','Et deserunt quod non nostrum aperiam. Voluptates ad nisi placeat non doloremque repellendus iure. Eum sapiente sint vel ','DodgerBlue',812,14363),(5,'rempel','Cumque dolor veritatis quae consequatur eius illum. Sapiente velit explicabo dolor facere consequatur. Quis quod quia re','Maroon',56156635,86),(6,'frami','Illum voluptas consequatur et velit sit. Voluptatem et asperiores ullam labore ea. Consequatur consequatur voluptatem es','PowderBlue',17013,45012),(7,'marquardt','Consectetur accusantium quia nobis sed. Pariatur non et dolores soluta. Tenetur quaerat optio quae perspiciatis. Corpori','LightCyan',9,915961461),(8,'roberts','Omnis sequi laboriosam quo unde dolores. Rerum ut assumenda quod sint eos. Non id quibusdam explicabo placeat.','Peru',6032,277698926),(9,'gusikowski','Est illo rem quaerat quis suscipit voluptatem eaque eaque. Sunt ipsa est ut et pariatur aut ullam. At maiores qui quis n','Peru',0,0),(11,'bbb','aaa','eee',12,9);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -255,8 +255,8 @@ CREATE TABLE `shoplists` (
   `User_Id` int DEFAULT NULL,
   PRIMARY KEY (`Shoplist_Id`),
   KEY `User_Id` (`User_Id`),
-  CONSTRAINT `shoplists_ibfk_1` FOREIGN KEY (`User_Id`) REFERENCES `users` (`User_Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  CONSTRAINT `shoplists_ibfk_1` FOREIGN KEY (`User_Id`) REFERENCES `users` (`User_Id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -265,8 +265,37 @@ CREATE TABLE `shoplists` (
 
 LOCK TABLES `shoplists` WRITE;
 /*!40000 ALTER TABLE `shoplists` DISABLE KEYS */;
-INSERT INTO `shoplists` VALUES (1,1),(2,2),(3,3),(4,4),(5,5),(6,6),(7,7),(8,8),(9,9),(10,10);
+INSERT INTO `shoplists` VALUES (1,1),(2,2),(3,3),(4,4),(5,5),(6,6),(7,7),(11,7),(13,7),(8,8),(12,8),(9,9),(14,9);
 /*!40000 ALTER TABLE `shoplists` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tokens`
+--
+
+DROP TABLE IF EXISTS `tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tokens` (
+  `Token_Id` int NOT NULL AUTO_INCREMENT,
+  `User_Id` int NOT NULL,
+  `Token_Value` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`Token_Id`),
+  UNIQUE KEY `Token_Value_Unique` (`Token_Value`),
+  UNIQUE KEY `User_Id_Unique` (`User_Id`),
+  KEY `Fk_User_Id` (`User_Id`),
+  CONSTRAINT `Fk_User_Id_Tokens` FOREIGN KEY (`User_Id`) REFERENCES `users` (`User_Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tokens`
+--
+
+LOCK TABLES `tokens` WRITE;
+/*!40000 ALTER TABLE `tokens` DISABLE KEYS */;
+INSERT INTO `tokens` VALUES (1,1,'jUX6zjrkiDIxd5xIOY1JWBPIIwSX4tuA04eswktedP0UW7dLRv1bXOG3VPgF3zLU'),(2,2,'KsH4TQJ6DTBcAs3QYKbF9q07DMtyHjUTV00YB4K8Lew3hMSaqppXPre4GeroLciC'),(3,5,'admin');
+/*!40000 ALTER TABLE `tokens` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -278,13 +307,13 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `User_Id` int NOT NULL AUTO_INCREMENT,
-  `User_FirstName` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
-  `User_LastName` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
-  `User_Email` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
-  `User_Password` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
-  `User_Phone` varchar(80) COLLATE utf8mb4_general_ci NOT NULL,
+  `User_FirstName` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `User_LastName` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `User_Email` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `User_Password` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `User_Phone` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`User_Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -293,7 +322,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'NouveauPrénom','NouveauNom','kling.kenneth@kilback.com','v9kEF&JrX@<*4X','+1 (952) 367-0147'),(2,'Bryce','Koelpin','ibogisich@schowalter.net','lagnqd>`+{~C&kw','407.570.5610'),(3,'Catherine','Stroman','queenie05@wisozk.com','ah.+hJ]<m','(386) 501-5060'),(4,'Burnice','Hessel','destin96@blick.com','mE\"LSA','434.784.9960'),(5,'duncanchanman','bbb','aaa','eee','06'),(6,'Bennie','Baumbach','maximillia26@hotmail.com','0A`^iDTva','+1-914-234-8198'),(7,'Sydnie','Gottlieb','cordelia.runolfsdottir@larson.com','{r%Ss.*^njWjz>_e)x','+1-364-383-8180'),(8,'Leone','Nikolaus','dickinson.sylvia@yahoo.com','+vs\"-a.n|','(360) 242-5232'),(9,'Rickie','Berge','bogisich.jennyfer@von.net','G2\"o8~VJu?<4.Ot','+17476684440'),(10,'Cielo','Kuvalis','rosanna94@gleason.com','uS04yS?g2Z*x','(820) 812-8297'),(11,'','','','',''),(12,'ccc','bbb','aaa','eee','06'),(13,'ccc','bbb','aaa','eee','06'),(14,'ccc','bbb','aaa','eee','06'),(15,'TRY','myname','yo@live.fr','eee','06'),(16,'OOO','bbb','aaa','eee','06'),(17,'TRY','bbb','aaa','eee','06'),(21,'OKITS','bbb','aaa','eee','06'),(22,'OKITS','bbb','aaa','eee','06'),(25,'tibo','bbb','aaa','eee','06'),(26,'OOO','bbb','aaa','eee','06');
+INSERT INTO `users` VALUES (1,'NouveauPrénom','NouveauNom','kling.kenneth@kilback.com','v9kEF&JrX@<*4X','+1 (952) 367-0147'),(2,'Bryce','Koelpin','ibogisich@schowalter.net','lagnqd>`+{~C&kw','407.570.5610'),(3,'Catherine','Stroman','queenie05@wisozk.com','ah.+hJ]<m','(386) 501-5060'),(4,'Burnice','Hessel','destin96@blick.com','mE\"LSA','434.784.9960'),(5,'duncanchanman','bbb','aaa','eee','06'),(6,'Bennie','Baumbach','maximillia26@hotmail.com','0A`^iDTva','+1-914-234-8198'),(7,'Sydnie','Gottlieb','cordelia.runolfsdottir@larson.com','{r%Ss.*^njWjz>_e)x','+1-364-383-8180'),(8,'Leone','Nikolaus','dickinson.sylvia@yahoo.com','+vs\"-a.n|','(360) 242-5232'),(9,'Rickie','Berge','bogisich.jennyfer@von.net','G2\"o8~VJu?<4.Ot','+17476684440'),(10,'Cielo','Kuvalis','rosanna94@gleason.com','uS04yS?g2Z*x','(820) 812-8297'),(11,'','','','',''),(12,'ccc','bbb','aaa','eee','06'),(13,'ccc','bbb','aaa','eee','06'),(14,'ccc','bbb','aaa','eee','06'),(15,'OOO','myname','yo@live.fr','eee','06'),(16,'OOO','bbb','aaa','eee','06'),(17,'TRY','bbb','aaa','eee','06'),(21,'OKITS','bbb','aaa','eee','06'),(22,'OKITS','bbb','aaa','eee','06'),(25,'tibo','bbb','aaa','eee','06'),(27,'ludo','bbb','aaa','eee','06'),(28,'OOO','bbb','aaa','eee','06'),(29,'OOO','bbb','aaa','eee','06');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -306,4 +335,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-04 13:28:31
+-- Dump completed on 2024-01-16 20:04:59

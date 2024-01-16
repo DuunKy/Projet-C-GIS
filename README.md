@@ -27,6 +27,16 @@ dotnet run --project server-web-GIS/API
 
 For a more advance documentation on the API, tchek "Documentation/ApiDocumentation.pdf"
 
+# Token
+
+here some token if you want to try out our token autorization:
+
+- KsH4TQJ6DTBcAs3QYKbF9q07DMtyHjUTV00YB4K8Lew3hMSaqppXPre4GeroLciC
+- jUX6zjrkiDIxd5xIOY1JWBPIIwSX4tuA04eswktedP0UW7dLRv1bXOG3VPgF3zLU
+- admin
+
+
+
 # Source
 
 - https://www.postman.com/

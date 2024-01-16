@@ -100,6 +100,11 @@ class SimpleHttpServer
             responseString = await new Controllers.InvoicesController().ProcessRequest(request);
         }
 
+        else if (request.Url.AbsolutePath.StartsWith("/api/tokens")) // tchek si l'url commence avec api/users
+        {
+            responseString = await new Controllers.TokensController().ProcessRequest(request);
+        }
+
         else
         {
             responseString = "Invalid endpoint, Error =  " + (int)HttpStatusCode.NotFound;
