@@ -19,7 +19,7 @@ namespace Controllers
 // gener mieux la connection sql = 1 connection
 
 
-        public string ProcessRequest(HttpListenerRequest request)
+        public async Task<string> ProcessRequest(HttpListenerRequest request)
         {
             string responseString = "";
 
@@ -27,7 +27,7 @@ namespace Controllers
             if (request.HttpMethod == "GET" && request.Url.PathAndQuery == "/api/carts")
             {
                 var options = new JsonSerializerOptions { WriteIndented = true };
-                responseString = JsonSerializer.Serialize(HttpGetAllCarts(), options);
+                responseString = JsonSerializer.Serialize(await HttpGetAllCarts(), options);
             }
             else if (request.HttpMethod == "GET" && request.Url.PathAndQuery.StartsWith("/api/carts"))
             {
@@ -36,7 +36,7 @@ namespace Controllers
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true };
-                    responseString = JsonSerializer.Serialize(HttpGetCartById(id), options);
+                    responseString = JsonSerializer.Serialize(await HttpGetCartById(id), options);
                     if (responseString == "null")
                     {
                         responseString = "Invalid id, Error =  " + (int)HttpStatusCode.BadRequest;
@@ -69,7 +69,7 @@ namespace Controllers
                     int cartTotal = data.Cart_Total;
                     int cartProductCount = data.Cart_ProductCount;
 
-                    responseString = HttpPostNewCart(shoplistId, productId, cartTotal, cartProductCount);
+                    responseString = await HttpPostNewCart(shoplistId, productId, cartTotal, cartProductCount);
                 }
             }
             else if (request.HttpMethod == "POST" && request.Url.PathAndQuery.StartsWith("/api/carts"))
@@ -88,7 +88,7 @@ namespace Controllers
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true };
-                    responseString = JsonSerializer.Serialize(HttpDelCartById(id), options);
+                    responseString = JsonSerializer.Serialize(await HttpDelCartById(id), options);
                 }
                 else if (parts.Length > 4)
                 {
@@ -114,13 +114,13 @@ namespace Controllers
 
 
         //FIXME: pb d'exeption lors d'un mauvais body entre dans la nouvelle shoplist a gerer.
-        private string HttpPostNewCart(int shoplistId, int productId, int cartTotal, int cartProductCount)
+        private async Task<string> HttpPostNewCart(int shoplistId, int productId, int cartTotal, int cartProductCount)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string SqlRequest = "INSERT INTO carts (Shoplist_Id, Product_Id, Cart_Total, Cart_ProductCount) " +
                                         "VALUES (@ShoplistId, @ProductId, @CartTotal, @CartProductCount)";
@@ -132,7 +132,7 @@ namespace Controllers
                         command.Parameters.AddWithValue("@CartTotal", cartTotal);
                         command.Parameters.AddWithValue("@CartProductCount", cartProductCount);
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {
@@ -154,21 +154,21 @@ namespace Controllers
 
 
 
-        private IEnumerable<Carts> HttpGetAllCarts()
+        private async Task<IEnumerable<Carts>> HttpGetAllCarts()
         {
             List<Carts> carts = new List<Carts>();
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "SELECT * FROM carts";
 
                 using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                 {
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             Carts cart = new Carts
                             {
@@ -187,13 +187,13 @@ namespace Controllers
 
 
 
-        private Carts HttpGetCartById(int id)
+        private async Task<Carts> HttpGetCartById(int id)
         {
             Carts cart = null;
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "SELECT * FROM carts WHERE Shoplist_Id = @ShoplistId";
 
@@ -201,9 +201,9 @@ namespace Controllers
                 {
                     command.Parameters.AddWithValue("@ShoplistId", id);
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             cart = new Carts
                             {
@@ -221,13 +221,13 @@ namespace Controllers
         }
 
 
-        private string HttpDelCartById(int id)
+        private async Task<string> HttpDelCartById(int id)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string SqlRequest = "DELETE FROM carts WHERE Shoplist_Id = @ShoplistId"; // Ma requête SQL
 
@@ -236,7 +236,7 @@ namespace Controllers
                         command.Parameters.AddWithValue("@ShoplistId", id);
                         // Permet d'envoyer des données dans la requête par un @ en C#
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {

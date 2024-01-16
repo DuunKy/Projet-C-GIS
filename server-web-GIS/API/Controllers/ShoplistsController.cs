@@ -19,7 +19,7 @@ namespace Controllers
 // gener mieux la connection sql = 1 connection
 
 
-        public string ProcessRequest(HttpListenerRequest request)
+        public async Task<string> ProcessRequest(HttpListenerRequest request)
         {
             string responseString = "";
 
@@ -28,7 +28,7 @@ namespace Controllers
             if (request.HttpMethod == "GET" && request.Url.PathAndQuery == "/api/shoplists")
             {
                 var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                responseString = JsonSerializer.Serialize(HttpGetAllShoplists(), options);
+                responseString = JsonSerializer.Serialize(await HttpGetAllShoplists(), options);
             }
             else if (request.HttpMethod == "GET" && request.Url.PathAndQuery.StartsWith("/api/shoplists"))
             {
@@ -37,7 +37,7 @@ namespace Controllers
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                    responseString = JsonSerializer.Serialize(HttpGetShoplistById(id), options);
+                    responseString = JsonSerializer.Serialize(await HttpGetShoplistById(id), options);
                     if (responseString == "null")
                     {
                     responseString = "Invalid id, Error =  " + (int)HttpStatusCode.BadRequest;
@@ -71,7 +71,7 @@ namespace Controllers
 
                     int userId = data.User_Id;
 
-                    responseString = HttpPostNewShoplist(userId);
+                    responseString = await HttpPostNewShoplist(userId);
                 }
             }
             else if (request.HttpMethod == "POST" && request.Url.PathAndQuery.StartsWith("/api/shoplists"))
@@ -99,7 +99,7 @@ namespace Controllers
 
                             
                             var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                            responseString = JsonSerializer.Serialize(HttpPutShoplistById(id, userId), options);
+                            responseString = JsonSerializer.Serialize(await HttpPutShoplistById(id, userId), options);
                         }
                     }
                     catch (Exception ex)
@@ -132,7 +132,7 @@ namespace Controllers
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                    responseString = JsonSerializer.Serialize(HttpDelShoplistById(id), options);
+                    responseString = JsonSerializer.Serialize(await HttpDelShoplistById(id), options);
 
                 }
                 else if (parts.Length > 4)
@@ -176,7 +176,7 @@ namespace Controllers
                         else
                         {
                             var options = new JsonSerializerOptions { WriteIndented = true };
-                            responseString = JsonSerializer.Serialize(HttpPatchShoplistById(id, userId), options);
+                            responseString = JsonSerializer.Serialize(await HttpPatchShoplistById(id, userId), options);
                         }
                     }
                     }
@@ -210,13 +210,13 @@ namespace Controllers
 
 
 
-        private string HttpPatchShoplistById(int id, int userId)
+        private async Task<string> HttpPatchShoplistById(int id, int userId)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     // cette requete permet de mettre a jour seulement les champs non vide
                     string SqlRequest = "UPDATE shoplists SET ";
@@ -242,7 +242,7 @@ namespace Controllers
                         command.Parameters.AddWithValue("@ShoplistId", id);
                         command.Parameters.AddWithValue("@UserId", userId);
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {
@@ -263,14 +263,14 @@ namespace Controllers
         }
 
         //FIXME: pb d'exeption lors d'un mauvais body entre dans la nouvelle shoplist a gerer.
-        private string HttpPostNewShoplist(int userId)
+        private async Task<string> HttpPostNewShoplist(int userId)
         {
             // sur postman, faire la requete avec un body contenant les infos ci dessus
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string SqlRequest = "INSERT INTO shoplists (User_Id) VALUES (@UserId)";
 
@@ -278,7 +278,8 @@ namespace Controllers
                     { // lie les @ a une string
                         command.Parameters.AddWithValue("@UserId", userId);
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
+
 
                         if (rowsAffected > 0)
                         {
@@ -299,22 +300,22 @@ namespace Controllers
         }
 
 
-        private IEnumerable<Shoplists> HttpGetAllShoplists()
+        private async Task<IEnumerable<Shoplists>> HttpGetAllShoplists()
         {
 
         List<Shoplists> shoplists = new List<Shoplists>(); //cree une liste vide
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "SELECT * FROM shoplists"; // recupère tt les products
 
                 using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                 {
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             Shoplists shoplist = new Shoplists // retourne en object les données de ma base SQL
                             {
@@ -330,7 +331,7 @@ namespace Controllers
         }
 
 
-        private string HttpPutShoplistById(int id, int userId)
+        private async Task<string> HttpPutShoplistById(int id, int userId)
         {
             //Put = Update, ou crée si existe pas
 
@@ -339,7 +340,7 @@ namespace Controllers
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "UPDATE shoplists SET User_Id = @UserId WHERE Shoplist_Id = @ShoplistId"; // ma query SQL
 
@@ -350,7 +351,7 @@ namespace Controllers
 
                     // permet d'envoyé des données dans la query par un @ en C#
 
-                   int rowsAffected = command.ExecuteNonQuery();
+                   int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
 
@@ -360,7 +361,7 @@ namespace Controllers
                         else
                         {
                             //cree un product sur le haut de la liste si aucun id atribué
-                            HttpPostNewShoplist(userId);
+                            await HttpPostNewShoplist(userId);
                             return "This Id is empty, New Product created";
                         }
                     }
@@ -374,14 +375,14 @@ namespace Controllers
         }
 
 
-        private Shoplists HttpGetShoplistById(int id)
+        private async Task<Shoplists> HttpGetShoplistById(int id)
         {
             
         Shoplists shoplist = null;
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "SELECT * FROM shoplists WHERE Shoplist_Id = @ShoplistId"; // ma query SQL
 
@@ -390,9 +391,9 @@ namespace Controllers
                     command.Parameters.AddWithValue("@ShoplistId", id); 
                     // permet d'envoyé des données dans la query par un @ en C#
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             shoplist = new Shoplists
                             {
@@ -408,14 +409,14 @@ namespace Controllers
         }
 
 
-        private string HttpDelShoplistById(int id)
+        private async Task<string> HttpDelShoplistById(int id)
         {
 
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string SqlRequest = "DELETE FROM shoplists WHERE Shoplist_Id = @ShoplistId"; // ma query SQL
 
@@ -424,7 +425,7 @@ namespace Controllers
                         command.Parameters.AddWithValue("@ShoplistId", id); 
                         // permet d'envoyé des données dans la query par un @ en C#
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {

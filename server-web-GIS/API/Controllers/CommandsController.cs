@@ -19,7 +19,7 @@ namespace Controllers
 // gener mieux la connection sql = 1 connection
 
 
-        public string ProcessRequest(HttpListenerRequest request)
+        public async Task<string> ProcessRequest(HttpListenerRequest request)
         {
             string responseString = "";
 
@@ -27,7 +27,7 @@ namespace Controllers
             if (request.HttpMethod == "GET" && request.Url.PathAndQuery == "/api/commands")
             {
                 var options = new JsonSerializerOptions { WriteIndented = true };
-                responseString = JsonSerializer.Serialize(HttpGetAllCommands(), options);
+                responseString = JsonSerializer.Serialize(await HttpGetAllCommands(), options);
             }
             else if (request.HttpMethod == "GET" && request.Url.PathAndQuery.StartsWith("/api/commands"))
             {
@@ -36,7 +36,7 @@ namespace Controllers
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true };
-                    responseString = JsonSerializer.Serialize(HttpGetCommandById(id), options);
+                    responseString = JsonSerializer.Serialize(await HttpGetCommandById(id), options);
                     if (responseString == "null")
                     {
                         responseString = "Invalid id, Error =  " + (int)HttpStatusCode.BadRequest;
@@ -67,7 +67,7 @@ namespace Controllers
                     int shoplistId = data.Shoplist_Id;
                     string orderDate = data.Command_OrderDate;
 
-                    responseString = HttpPostNewCommand(shoplistId, orderDate);
+                    responseString =await HttpPostNewCommand(shoplistId, orderDate);
                 }
             }
             else if (request.HttpMethod == "POST" && request.Url.PathAndQuery.StartsWith("/api/commands"))
@@ -86,7 +86,7 @@ namespace Controllers
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true };
-                    responseString = JsonSerializer.Serialize(HttpDelCommandById(id), options);
+                    responseString = JsonSerializer.Serialize(await HttpDelCommandById(id), options);
                 }
                 else if (parts.Length > 4)
                 {
@@ -112,13 +112,13 @@ namespace Controllers
 
 
         //FIXME: pb d'exeption lors d'un mauvais body entre dans la nouvelle shoplist a gerer.
-        private string HttpPostNewCommand(int shoplistId, string orderDate)
+        private async Task<string> HttpPostNewCommand(int shoplistId, string orderDate)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string SqlRequest = "INSERT INTO commands (Shoplist_Id, Command_OrderDate) " +
                                         "VALUES (@ShoplistId, @OrderDate)";
@@ -128,7 +128,7 @@ namespace Controllers
                         command.Parameters.AddWithValue("@ShoplistId", shoplistId);
                         command.Parameters.AddWithValue("@OrderDate", orderDate);
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected =await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {
@@ -148,7 +148,7 @@ namespace Controllers
             }
         }
 
-        private IEnumerable<Commands> HttpGetAllCommands()
+        private async Task<IEnumerable<Commands>> HttpGetAllCommands()
         {
             List<Commands> commands = new List<Commands>();
 
@@ -160,9 +160,9 @@ namespace Controllers
 
                 using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                 {
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             Commands commande = new Commands
                             {
@@ -178,13 +178,13 @@ namespace Controllers
             return commands;
         }
 
-        private Commands HttpGetCommandById(int id)
+        private async Task<Commands> HttpGetCommandById(int id)
         {
             Commands commande = null;
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "SELECT * FROM commands WHERE Command_Id = @CommandId";
 
@@ -192,9 +192,9 @@ namespace Controllers
                 {
                     command.Parameters.AddWithValue("@CommandId", id);
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             commande = new Commands
                             {
@@ -210,13 +210,13 @@ namespace Controllers
             return commande;
         }
 
-        private string HttpDelCommandById(int id)
+        private async Task<string> HttpDelCommandById(int id)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string SqlRequest = "DELETE FROM commands WHERE Command_Id = @CommandId";
 
@@ -224,7 +224,7 @@ namespace Controllers
                     {
                         command.Parameters.AddWithValue("@CommandId", id);
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {

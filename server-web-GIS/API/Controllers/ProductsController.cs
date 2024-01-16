@@ -19,7 +19,7 @@ namespace Controllers
 // gener mieux la connection sql = 1 connection
 
 
-        public string ProcessRequest(HttpListenerRequest request)
+        public async Task<string> ProcessRequest(HttpListenerRequest request)
         {
             string responseString = "";
 
@@ -28,7 +28,7 @@ namespace Controllers
             if (request.HttpMethod == "GET" && request.Url.PathAndQuery == "/api/products")
             {
                 var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                responseString = JsonSerializer.Serialize(HttpGetAllProducts(), options);
+                responseString = JsonSerializer.Serialize(await HttpGetAllProducts(), options);
             }
             else if (request.HttpMethod == "GET" && request.Url.PathAndQuery.StartsWith("/api/products/"))
             {
@@ -37,7 +37,7 @@ namespace Controllers
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                    responseString = JsonSerializer.Serialize(HttpGetProductById(id), options);
+                    responseString = JsonSerializer.Serialize(await HttpGetProductById(id), options);
                     if (responseString == "null")
                     {
                     responseString = "Invalid id, Error =  " + (int)HttpStatusCode.BadRequest;
@@ -58,12 +58,12 @@ namespace Controllers
 
                         var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
 
-                        responseString = JsonSerializer.Serialize(HttpGetProductByName(myEndPointString), options);
+                        responseString = JsonSerializer.Serialize(await HttpGetProductByName(myEndPointString), options);
 
 
                         if (responseString == "null")
                         {
-                            responseString = JsonSerializer.Serialize(HttpGetAllProductByType(myEndPointString), options);    
+                            responseString = JsonSerializer.Serialize(await HttpGetAllProductByType(myEndPointString), options);    
                         }
                         
                         
@@ -91,7 +91,7 @@ namespace Controllers
                     int numberLeft = data.Product_NumberLeft;
                     int price = data.Product_Price;
 
-                    responseString = HttpPostNewProduct(name, description, type, numberLeft, price);
+                    responseString = await HttpPostNewProduct(name, description, type, numberLeft, price);
                 }
             }
 
@@ -124,7 +124,7 @@ namespace Controllers
 
                             
                             var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                            responseString = JsonSerializer.Serialize(HttpPutProductById(id, name, description, type, numberLeft, price), options);
+                            responseString = JsonSerializer.Serialize(await HttpPutProductById(id, name, description, type, numberLeft, price), options);
                         }
                     }
                     catch (Exception ex)
@@ -157,7 +157,7 @@ namespace Controllers
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                    responseString = JsonSerializer.Serialize(HttpDelProductById(id), options);
+                    responseString = JsonSerializer.Serialize(await HttpDelProductById(id), options);
 
                 }
                 else if (parts.Length > 4)
@@ -205,7 +205,7 @@ namespace Controllers
                         else
                         {
                             var options = new JsonSerializerOptions { WriteIndented = true };
-                            responseString = JsonSerializer.Serialize(HttpPatchProductById(id, name, description, type, numberLeft, price), options);
+                            responseString = JsonSerializer.Serialize(await HttpPatchProductById(id, name, description, type, numberLeft, price), options);
                         }
                     }
                     }
@@ -235,13 +235,13 @@ namespace Controllers
 
 
 
-        private string HttpPatchProductById(int id, string name, string description, string type, int numberLeft, int price)
+        private async Task<string> HttpPatchProductById(int id, string name, string description, string type, int numberLeft, int price)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     // cette requete permet de mettre a jour seulement les champs non vide
                     string SqlRequest = "UPDATE products SET ";
@@ -288,7 +288,7 @@ namespace Controllers
                         command.Parameters.AddWithValue("@NumberLeft", numberLeft);
                         command.Parameters.AddWithValue("@Price", price);
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {
@@ -309,14 +309,14 @@ namespace Controllers
         }
 
 
-        private string HttpPostNewProduct(string name, string description, string type, int numberLeft , int price)
+        private async Task<string> HttpPostNewProduct(string name, string description, string type, int numberLeft , int price)
         {
             // sur postman, faire la requete avec un body contenant les infos ci dessus
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string SqlRequest = "INSERT INTO products (Product_Name, Product_Description, Product_Type, Product_NumberLeft, Product_Price) VALUES (@Name, @Description, @Type, @NumberLeft, @Price)";
 
@@ -328,7 +328,7 @@ namespace Controllers
                         command.Parameters.AddWithValue("@NumberLeft", numberLeft);
                         command.Parameters.AddWithValue("@Price", price);
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {
@@ -349,22 +349,22 @@ namespace Controllers
         }
 
 
-        private IEnumerable<Products> HttpGetAllProducts()
+        private async Task<IEnumerable<Products>> HttpGetAllProducts()
         {
 
         List<Products> products = new List<Products>(); //cree une liste vide
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "SELECT * FROM products"; // recupère tt les products
 
                 using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                 {
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             Products product = new Products // retourne en object les données de ma base SQL
                             {
@@ -384,7 +384,7 @@ namespace Controllers
         }
 
 
-        private string HttpPutProductById(int id, string name, string description, string type, int numberLeft, int price)
+        private async Task<string> HttpPutProductById(int id, string name, string description, string type, int numberLeft, int price)
         {
             //Put = Update, ou crée si existe pas
 
@@ -393,7 +393,7 @@ namespace Controllers
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "UPDATE products SET Product_Name = @Name, Product_Description = @Description, Product_Type = @Type, Product_NumberLeft = @NumberLeft, Product_Price = @Price WHERE Product_Id = @ProductId"; // ma query SQL
 
@@ -408,7 +408,7 @@ namespace Controllers
 
                     // permet d'envoyé des données dans la query par un @ en C#
 
-                   int rowsAffected = command.ExecuteNonQuery();
+                   int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
 
@@ -418,7 +418,7 @@ namespace Controllers
                         else
                         {
                             //cree un product sur le haut de la liste si aucun id atribué
-                            HttpPostNewProduct(name, description, type, numberLeft, price);
+                            await HttpPostNewProduct(name, description, type, numberLeft, price);
                             return "This Id is empty, New Product created";
                         }
                     }
@@ -432,14 +432,14 @@ namespace Controllers
         }
 
 
-        private Products HttpGetProductById(int id)
+        private async Task<Products> HttpGetProductById(int id)
         {
             
         Products product = null;
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "SELECT * FROM products WHERE Product_Id = @ProductId"; // ma query SQL
 
@@ -448,9 +448,9 @@ namespace Controllers
                     command.Parameters.AddWithValue("@ProductId", id); 
                     // permet d'envoyé des données dans la query par un @ en C#
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             product = new Products
                             {
@@ -469,14 +469,14 @@ namespace Controllers
             return product;
         }
 
-        private Products HttpGetProductByName(string name)
+        private async Task<Products> HttpGetProductByName(string name)
         {
             
         Products product = null;
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "SELECT * FROM products WHERE Product_Name = @ProductName"; // ma query SQL
 
@@ -485,9 +485,9 @@ namespace Controllers
                     command.Parameters.AddWithValue("@ProductName", name); 
                     // permet d'envoyé des données dans la query par un @ en C#
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             product = new Products
                             {
@@ -506,14 +506,14 @@ namespace Controllers
             return product;
         }
 
-        private IEnumerable<Products> HttpGetAllProductByType(string type)
+        private async Task<IEnumerable<Products>> HttpGetAllProductByType(string type)
         {
             
         List<Products> products = new List<Products>();
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "SELECT * FROM products WHERE Product_Type = @ProductType"; // ma query SQL
 
@@ -522,9 +522,9 @@ namespace Controllers
                     command.Parameters.AddWithValue("@ProductType", type); 
                     // permet d'envoyé des données dans la query par un @ en C#
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                              Products product = new Products
                             {
@@ -544,14 +544,14 @@ namespace Controllers
             return products;
         }
 
-        private string HttpDelProductById(int id)
+        private async Task<string> HttpDelProductById(int id)
         {
 
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string SqlRequest = "DELETE FROM products WHERE Product_Id = @ProductId"; // ma query SQL
 
@@ -560,7 +560,7 @@ namespace Controllers
                         command.Parameters.AddWithValue("@ProductId", id); 
                         // permet d'envoyé des données dans la query par un @ en C#
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {

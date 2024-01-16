@@ -18,7 +18,7 @@ namespace Controllers
 // gener mieux la connection sql = 1 connection
 
 
-        public string ProcessRequest(HttpListenerRequest request)
+        public async Task<string> ProcessRequest(HttpListenerRequest request)
         {
             string responseString = "";
 
@@ -27,7 +27,7 @@ namespace Controllers
             if (request.HttpMethod == "GET" && request.Url.PathAndQuery == "/api/users")
             {
                 var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                responseString = JsonSerializer.Serialize(HttpGetAllUsers(), options);
+                responseString = JsonSerializer.Serialize(await HttpGetAllUsers(), options);
             }
             else if (request.HttpMethod == "GET" && request.Url.PathAndQuery.StartsWith("/api/users/"))
             {
@@ -36,7 +36,7 @@ namespace Controllers
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                    responseString = JsonSerializer.Serialize(HttpGetUserById(id), options);
+                    responseString = JsonSerializer.Serialize(await HttpGetUserById(id), options);
                     if (responseString == "null")
                     {
                     responseString = "Invalid id, Error =  " + (int)HttpStatusCode.BadRequest;
@@ -47,7 +47,7 @@ namespace Controllers
                 else if (parts.Length == 5 && parts[4] == "shoplists" && int.TryParse(parts[3], out int myId))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true };
-                    var shoplists = HttpGetShoplistByUserId(myId);
+                    var shoplists = await HttpGetShoplistByUserId(myId);
 
                     if (shoplists.Any())
                     {
@@ -62,7 +62,7 @@ namespace Controllers
                 else if (parts.Length == 5 && parts[4] == "carts" && int.TryParse(parts[3], out int myotherId))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true };
-                    var shoplists = HttpGetCartsByUserId(myotherId);
+                    var shoplists = await HttpGetCartsByUserId(myotherId);
 
                     if (shoplists.Any())
                     {
@@ -77,7 +77,7 @@ namespace Controllers
                 else if (parts.Length == 5 && parts[4] == "commands" && int.TryParse(parts[3], out int mythirdId))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true };
-                    var shoplists = HttpGetCommandsByUserId(mythirdId);
+                    var shoplists = await HttpGetCommandsByUserId(mythirdId);
 
                     if (shoplists.Any())
                     {
@@ -92,7 +92,7 @@ namespace Controllers
                 else if (parts.Length == 5 && parts[4] == "invoices" && int.TryParse(parts[3], out int mylastId))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true };
-                    var shoplists = HttpGetInvoicesByUserId(mylastId);
+                    var shoplists = await HttpGetInvoicesByUserId(mylastId);
 
                     if (shoplists.Any())
                     {
@@ -119,7 +119,7 @@ namespace Controllers
                     if (myEndPointString.Contains("@"))
                     {
                         var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                        responseString = JsonSerializer.Serialize(HttpGetUserByEmail(myEndPointString), options);
+                        responseString = JsonSerializer.Serialize(await HttpGetUserByEmail(myEndPointString), options);
 
                         if (responseString == "null")
                         {
@@ -129,7 +129,7 @@ namespace Controllers
                     else
                     {
                         var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                        responseString = JsonSerializer.Serialize(HttpGetUserByLastName(myEndPointString), options);
+                        responseString = JsonSerializer.Serialize(await HttpGetUserByLastName(myEndPointString), options);
                         
                         if (responseString == "null")
                         {
@@ -158,7 +158,7 @@ namespace Controllers
                     string password = data.User_Password;
                     string phone = data.User_Phone;
 
-                    responseString = HttpPostNewUser(firstName, lastName, email, password, phone);
+                    responseString = await HttpPostNewUser(firstName, lastName, email, password, phone);
                 }
             }
             else if (request.HttpMethod == "POST" && request.Url.PathAndQuery.StartsWith("/api/users"))
@@ -190,7 +190,7 @@ namespace Controllers
 
                             
                             var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                            responseString = JsonSerializer.Serialize(HttpPutUserById(id, firstName, lastName, email, password, phone), options);
+                            responseString = JsonSerializer.Serialize(await HttpPutUserById(id, firstName, lastName, email, password, phone), options);
                         }
                     }
                     catch (Exception ex)
@@ -223,7 +223,7 @@ namespace Controllers
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true }; //cette ligne rend le json html jolie
-                    responseString = JsonSerializer.Serialize(HttpDelUserById(id), options);
+                    responseString = JsonSerializer.Serialize(await HttpDelUserById(id), options);
 
                 }
                 else if (parts.Length > 4)
@@ -270,7 +270,7 @@ namespace Controllers
                         else
                         {
                             var options = new JsonSerializerOptions { WriteIndented = true };
-                            responseString = JsonSerializer.Serialize(HttpPatchUserById(id, firstName, lastName, email, password, phone), options);
+                            responseString = JsonSerializer.Serialize(await HttpPatchUserById(id, firstName, lastName, email, password, phone), options);
                         }
                     }
                     }
@@ -300,13 +300,13 @@ namespace Controllers
 
 
 
-        private string HttpPatchUserById(int id, string firstName, string lastName, string email, string password, string phone)
+        private async Task<string> HttpPatchUserById(int id, string firstName, string lastName, string email, string password, string phone)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     // cette requete permet de mettre a jour seulement les champs non vide
                     string SqlRequest = "UPDATE users SET ";
@@ -350,7 +350,7 @@ namespace Controllers
                         command.Parameters.AddWithValue("@Password", password);
                         command.Parameters.AddWithValue("@Phone", phone);
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {
@@ -371,14 +371,14 @@ namespace Controllers
         }
 
 
-        private string HttpPostNewUser(string firstName, string lastName, string email, string password, string phone)
+        private async Task<string> HttpPostNewUser(string firstName, string lastName, string email, string password, string phone)
         {
             // sur postman, faire la requete avec un body contenant les infos ci dessus
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string SqlRequest = "INSERT INTO users (User_FirstName, User_LastName, User_Email, User_Password, User_Phone) VALUES (@FirstName, @LastName, @Email, @Password, @Phone)";
 
@@ -390,7 +390,7 @@ namespace Controllers
                         command.Parameters.AddWithValue("@Password", password);
                         command.Parameters.AddWithValue("@Phone", phone);
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {
@@ -414,22 +414,23 @@ namespace Controllers
         // HttpPostNewUserWithId si on veux cree sur un Id specifique
 
 
-        private IEnumerable<Users> HttpGetAllUsers()
+        private async Task<IEnumerable<Users>> HttpGetAllUsers()
         {
 
         List<Users> users = new List<Users>(); //cree une liste vide
 
+
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "SELECT * FROM users"; // recupère tt les users
 
                 using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                 {
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             Users user = new Users // retourne en object les données de ma base SQL
                             {
@@ -449,44 +450,51 @@ namespace Controllers
         }
 
 
-        private string HttpPutUserById(int id, string firstName, string lastName, string email, string password, string phone)
+        private async Task<string> HttpPutUserById(int id, string firstName, string lastName, string email, string password, string phone)
         {
             //Put = Update, ou crée si existe pas
 
             try
             {
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+             string result = await Task.Run(async () =>
             {
-                connection.Open();
 
-                string SqlRequest = "UPDATE users SET User_FirstName = @FirstName, User_LastName = @LastName, User_Email = @Email, User_Password = @Password, User_Phone = @Phone WHERE User_Id = @UserId"; // ma query SQL
-
-                using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    command.Parameters.AddWithValue("@UserId", id);
-                    command.Parameters.AddWithValue("@FirstName", firstName);
-                    command.Parameters.AddWithValue("@LastName", lastName);
-                    command.Parameters.AddWithValue("@Email", email); 
-                    command.Parameters.AddWithValue("@Password", password);
-                    command.Parameters.AddWithValue("@Phone", phone);
+                    await connection.OpenAsync();
 
-                    // permet d'envoyé des données dans la query par un @ en C#
+                    string SqlRequest = "UPDATE users SET User_FirstName = @FirstName, User_LastName = @LastName, User_Email = @Email, User_Password = @Password, User_Phone = @Phone WHERE User_Id = @UserId"; // ma query SQL
 
-                   int rowsAffected = command.ExecuteNonQuery();
+                    using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
+                    {
+                        command.Parameters.AddWithValue("@UserId", id);
+                        command.Parameters.AddWithValue("@FirstName", firstName);
+                        command.Parameters.AddWithValue("@LastName", lastName);
+                        command.Parameters.AddWithValue("@Email", email); 
+                        command.Parameters.AddWithValue("@Password", password);
+                        command.Parameters.AddWithValue("@Phone", phone);
 
-                        if (rowsAffected > 0)
-                        {
-                            return "Its work! User mis a jour! ";
-                        }
-                        else
-                        {
-                            //cree un user sur le haut de la liste si aucun id atribué
-                            HttpPostNewUser(firstName, lastName, email, password, phone);
-                            return "This Id is empty, New User created";
+                        // permet d'envoyé des données dans la query par un @ en C#
+
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                            if (rowsAffected > 0)
+                            {
+                        return "Its work! User mis a jour! ";
+                            }
+                            else
+                            {
+                                //cree un user sur le haut de la liste si aucun id atribué
+                                await HttpPostNewUser(firstName, lastName, email, password, phone);
+                                return "This Id is empty, New User created";
+                            }
                         }
                     }
-                }
+                });
+
+            return result;
+
             }
             catch (Exception ex)
             {
@@ -496,9 +504,9 @@ namespace Controllers
         }
 
 
-        private IEnumerable<Shoplists> HttpGetShoplistByUserId(int id)
+        private async Task<IEnumerable<Shoplists>> HttpGetShoplistByUserId(int id)
         {
-            
+        
         List<Shoplists> shoplists = new List<Shoplists>();
 
             try
@@ -506,7 +514,7 @@ namespace Controllers
 
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string SqlRequest = "SELECT * FROM shoplists WHERE User_Id = @UserId"; // ma query SQL
 
@@ -515,9 +523,9 @@ namespace Controllers
                         command.Parameters.AddWithValue("@UserId", id); 
                         // permet d'envoyé des données dans la query par un @ en C#
 
-                        using (MySqlDataReader reader = command.ExecuteReader())
+                        using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                         {
-                            while (reader.Read())
+                            while (await reader.ReadAsync())
                             {
                                 Shoplists shoplist = new Shoplists
                                 {
@@ -539,13 +547,13 @@ namespace Controllers
         return shoplists;
         }
 
-        private IEnumerable<Commands> HttpGetCommandsByUserId(int userId)
+        private async Task<IEnumerable<Commands>> HttpGetCommandsByUserId(int userId)
         {
             List<Commands> commands = new List<Commands>();
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 // Utilisez une requête SQL avec une jointure pour récupérer les commandes liées au User_Id
 
@@ -558,9 +566,9 @@ namespace Controllers
                 {
                     command.Parameters.AddWithValue("@UserId", userId);
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             Commands commande = new Commands
                             {
@@ -578,13 +586,13 @@ namespace Controllers
         }
 
 
-        private IEnumerable<Carts> HttpGetCartsByUserId(int userId)
+        private async Task<IEnumerable<Carts>> HttpGetCartsByUserId(int userId)
         {
             List<Carts> carts = new List<Carts>();
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 // Utilisez une requête SQL avec une jointure pour récupérer les carts liés au User_Id
 
@@ -597,9 +605,9 @@ namespace Controllers
                 {
                     command.Parameters.AddWithValue("@UserId", userId);
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             Carts cart = new Carts
                             {
@@ -617,13 +625,13 @@ namespace Controllers
             return carts;
         }
 
-        private IEnumerable<Invoices> HttpGetInvoicesByUserId(int userId)
+        private async Task<IEnumerable<Invoices>> HttpGetInvoicesByUserId(int userId)
         {
             List<Invoices> invoices = new List<Invoices>();
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 // Utilisez une requête SQL avec une jointure pour récupérer les factures liées au User_Id
 
@@ -637,9 +645,9 @@ namespace Controllers
                 {
                     command.Parameters.AddWithValue("@UserId", userId);
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             Invoices invoice = new Invoices
                             {
@@ -658,14 +666,14 @@ namespace Controllers
 
 
 
-        private Users HttpGetUserById(int id)
+        private async Task<Users> HttpGetUserById(int id)
         {
             
         Users user = null;
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "SELECT * FROM users WHERE User_Id = @UserId"; // ma query SQL
 
@@ -674,9 +682,9 @@ namespace Controllers
                     command.Parameters.AddWithValue("@UserId", id); 
                     // permet d'envoyé des données dans la query par un @ en C#
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             user = new Users
                             {
@@ -695,14 +703,14 @@ namespace Controllers
             return user;
         }
 
-        private Users HttpGetUserByLastName(string name)
+        private async Task<Users> HttpGetUserByLastName(string name)
         {
             
         Users user = null;
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "SELECT * FROM users WHERE User_LastName = @UserLastName"; // ma query SQL
 
@@ -711,9 +719,9 @@ namespace Controllers
                     command.Parameters.AddWithValue("@UserLastName", name); 
                     // permet d'envoyé des données dans la query par un @ en C#
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             user = new Users
                             {
@@ -732,14 +740,14 @@ namespace Controllers
             return user;
         }
 
-        private Users HttpGetUserByEmail(string email)
+        private async Task<Users> HttpGetUserByEmail(string email)
         {
             
         Users user = null;
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "SELECT * FROM users WHERE User_Email = @UserEmail"; // ma query SQL
 
@@ -748,9 +756,9 @@ namespace Controllers
                     command.Parameters.AddWithValue("@UserEmail", email); 
                     // permet d'envoyé des données dans la query par un @ en C#
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             user = new Users
                             {
@@ -769,14 +777,14 @@ namespace Controllers
             return user;
         }
 
-        private string HttpDelUserById(int id)
+        private async Task<string> HttpDelUserById(int id)
         {
 
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string SqlRequest = "DELETE FROM users WHERE User_Id = @UserId"; // ma query SQL
 
@@ -785,7 +793,7 @@ namespace Controllers
                         command.Parameters.AddWithValue("@UserId", id); 
                         // permet d'envoyé des données dans la query par un @ en C#
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {

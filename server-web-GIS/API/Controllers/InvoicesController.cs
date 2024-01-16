@@ -19,7 +19,7 @@ namespace Controllers
 // gener mieux la connection sql = 1 connection
 
 
-       public string ProcessRequest(HttpListenerRequest request)
+       public async Task<string> ProcessRequest(HttpListenerRequest request)
         {
             string responseString = "";
 
@@ -27,7 +27,7 @@ namespace Controllers
             if (request.HttpMethod == "GET" && request.Url.PathAndQuery == "/api/invoices")
             {
                 var options = new JsonSerializerOptions { WriteIndented = true };
-                responseString = JsonSerializer.Serialize(HttpGetAllInvoices(), options);
+                responseString = JsonSerializer.Serialize(await HttpGetAllInvoices(), options);
             }
             else if (request.HttpMethod == "GET" && request.Url.PathAndQuery.StartsWith("/api/invoices"))
             {
@@ -36,7 +36,7 @@ namespace Controllers
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true };
-                    responseString = JsonSerializer.Serialize(HttpGetInvoiceById(id), options);
+                    responseString = JsonSerializer.Serialize(await HttpGetInvoiceById(id), options);
                     if (responseString == "null")
                     {
                         responseString = "Invalid id, Error =  " + (int)HttpStatusCode.BadRequest;
@@ -67,7 +67,7 @@ namespace Controllers
                     int commandId = data.Command_Id;
                     string invoiceDate = data.Invoice_Date;
 
-                    responseString = HttpPostNewInvoice(commandId, invoiceDate);
+                    responseString = await HttpPostNewInvoice(commandId, invoiceDate);
                 }
             }
             else if (request.HttpMethod == "POST" && request.Url.PathAndQuery.StartsWith("/api/invoices"))
@@ -86,7 +86,7 @@ namespace Controllers
                 if (parts.Length == 4 && int.TryParse(parts[3], out int id))
                 {
                     var options = new JsonSerializerOptions { WriteIndented = true };
-                    responseString = JsonSerializer.Serialize(HttpDelInvoiceById(id), options);
+                    responseString = JsonSerializer.Serialize(await HttpDelInvoiceById(id), options);
                 }
                 else if (parts.Length > 4)
                 {
@@ -109,13 +109,13 @@ namespace Controllers
             return responseString;
         }
 
-        private string HttpPostNewInvoice(int commandId, string invoiceDate)
+        private async Task<string> HttpPostNewInvoice(int commandId, string invoiceDate)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string SqlRequest = "INSERT INTO invoices (Command_Id, Invoice_Date) " +
                                         "VALUES (@CommandId, @InvoiceDate)";
@@ -125,7 +125,7 @@ namespace Controllers
                         command.Parameters.AddWithValue("@CommandId", commandId);
                         command.Parameters.AddWithValue("@InvoiceDate", invoiceDate);
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {
@@ -145,21 +145,21 @@ namespace Controllers
             }
         }
 
-        private IEnumerable<Invoices> HttpGetAllInvoices()
+        private async Task<IEnumerable<Invoices>> HttpGetAllInvoices()
         {
             List<Invoices> invoices = new List<Invoices>();
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "SELECT * FROM invoices";
 
                 using (MySqlCommand command = new MySqlCommand(SqlRequest, connection))
                 {
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             Invoices invoice = new Invoices
                             {
@@ -175,13 +175,13 @@ namespace Controllers
             return invoices;
         }
 
-        private Invoices HttpGetInvoiceById(int id)
+        private async Task<Invoices> HttpGetInvoiceById(int id)
         {
             Invoices invoice = null;
 
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 string SqlRequest = "SELECT * FROM invoices WHERE Invoices_Id = @InvoicesId";
 
@@ -189,9 +189,9 @@ namespace Controllers
                 {
                     command.Parameters.AddWithValue("@InvoicesId", id);
 
-                    using (MySqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        if (reader.Read())
+                        if (await reader.ReadAsync())
                         {
                             invoice = new Invoices
                             {
@@ -207,13 +207,13 @@ namespace Controllers
             return invoice;
         }
 
-        private string HttpDelInvoiceById(int id)
+        private async Task<string> HttpDelInvoiceById(int id)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
 
                     string SqlRequest = "DELETE FROM invoices WHERE Invoices_Id = @InvoicesId";
 
@@ -221,7 +221,7 @@ namespace Controllers
                     {
                         command.Parameters.AddWithValue("@InvoicesId", id);
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {
