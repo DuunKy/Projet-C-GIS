@@ -9,11 +9,15 @@ This is a project free of right. You can use it has you wish if you integre our 
 
 How to simply start the project:
 
--Dowload and launch Docker Desktop
+- Dowload and launch Docker Desktop
 
--On the terminal run :
+- On the terminal run :
 
 docker-compose up --build
+
+- For run the visual application, use:
+
+dotnet run --project HelloWPFApp/HelloWPFApp
 
 - Our Github: https://github.com/DuunKy/Projet-C-GIS
 - Our trello: https://trello.com/invite/b/L78yAKCT/ATTI5c790d2beb05c064e996e08f4a62f40eFC1B8ED9/projet-c

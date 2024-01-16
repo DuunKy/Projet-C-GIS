@@ -55,19 +55,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ADMIN\\.nuget\\packages\\": {}
+    "C:\\Users\\tibof\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ADMIN\\Desktop\\B2 Classes 09-06\\S1\\CSharp\\Projet-C-GIS\\HelloWPFApp\\HelloWPFApp\\LogicielWPFApp.csproj",
+      "projectUniqueName": "C:\\Users\\tibof\\Desktop\\Projet\\Project B2\\Projet-C-GIS\\HelloWPFApp\\HelloWPFApp\\LogicielWPFApp.csproj",
       "projectName": "LogicielWPFApp",
-      "projectPath": "C:\\Users\\ADMIN\\Desktop\\B2 Classes 09-06\\S1\\CSharp\\Projet-C-GIS\\HelloWPFApp\\HelloWPFApp\\LogicielWPFApp.csproj",
-      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ADMIN\\Desktop\\B2 Classes 09-06\\S1\\CSharp\\Projet-C-GIS\\HelloWPFApp\\HelloWPFApp\\obj\\",
+      "projectPath": "C:\\Users\\tibof\\Desktop\\Projet\\Project B2\\Projet-C-GIS\\HelloWPFApp\\HelloWPFApp\\LogicielWPFApp.csproj",
+      "packagesPath": "C:\\Users\\tibof\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\tibof\\Desktop\\Projet\\Project B2\\Projet-C-GIS\\HelloWPFApp\\HelloWPFApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\tibof\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -111,8 +111,20 @@
         "warn": true,
         "downloadDependencies": [
           {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[3.1.10, 3.1.10]"
+          },
+          {
             "name": "Microsoft.NETCore.App.Host.win-x64",
             "version": "[3.1.32, 3.1.32]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[3.1.0, 3.1.0]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[3.1.0, 3.1.0]"
           }
         ],
         "frameworkReferences": {
@@ -123,7 +135,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }
