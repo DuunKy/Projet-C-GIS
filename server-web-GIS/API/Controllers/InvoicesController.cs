@@ -12,7 +12,7 @@ namespace Controllers
 {
     public class InvoicesController
     {
-        private string connectionString = "Server=localhost;User ID=root;Password=azerty;Database=newschema";
+        private string connectionString = "server=172.16.238.10;uid=root;pwd=root;database=dunkyandfilscorporation";
         // mes identifiants pour me connect a mon mysql workbench
 
 // TODO: 
