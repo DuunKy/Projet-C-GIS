@@ -1,8 +1,8 @@
 namespace Models
 {
-    public class Shoplists
+    public class Likes
     {
-        public int Shoplist_Id { get; set; }
         public int User_Id { get; set; }
+        public int Map_Id { get; set; }
     }
 }

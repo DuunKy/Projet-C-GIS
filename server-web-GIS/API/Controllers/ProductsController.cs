@@ -12,7 +12,7 @@ namespace Controllers
 {
     public class ProductsController
     {
-        private string connectionString = "Server=172.16.238.10;User ID=root;Password=root;Database=dunkyandfilscorporation";
+        private string connectionString = "Server=localhost;User ID=root;Password=azerty;Database=newschema";
         // mes identifiants pour me connect a mon mysql workbench
 
 // TODO: 
