@@ -1,6 +1,6 @@
 namespace Models
 {
-    public class Route
+    public class Routes
     {
         public int Route_Id { get; set; }
         public int Mark_Start { get; set; }

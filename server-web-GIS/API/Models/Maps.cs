@@ -1,6 +1,6 @@
 namespace Models
 {
-    public class Map
+    public class Maps
     {
         public int Map_Id { get; set; }
         public int User_Id { get; set; }
